@@ -337,41 +337,7 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(w
       .attr('fill','none').attr('stroke','#8AAECE').attr('stroke-width','.9').attr('stroke-opacity','.65');
   });
 
-  // ── TERRAIN-RGB HILLSHADE via canvas ──
-  function computeHillshade(data, size, z) {
-    const out = new Uint8ClampedArray(size * size * 4);
-    const az = 315 * Math.PI / 180;   // sun from NW
-    const alt = 45 * Math.PI / 180;   // sun altitude
-    const cosA = Math.cos(alt), sinA = Math.sin(alt);
-    // Ground pixel size in meters at ~44°N midpoint latitude
-    const ps = 40075016 * Math.cos(44 * Math.PI / 180) / (size * Math.pow(2, z));
-    const zf = 6; // vertical exaggeration
-
-    const elev = (x, y) => {
-      x = Math.max(0, Math.min(size-1, x));
-      y = Math.max(0, Math.min(size-1, y));
-      const i = (y * size + x) * 4;
-      return -10000 + (data[i]*65536 + data[i+1]*256 + data[i+2]) * 0.1;
-    };
-
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
-        const dzdx = (elev(x+1,y) - elev(x-1,y)) / (2*ps) * zf;
-        const dzdy = (elev(x,y+1) - elev(x,y-1)) / (2*ps) * zf;
-        const slope  = Math.atan(Math.sqrt(dzdx*dzdx + dzdy*dzdy));
-        const aspect = Math.atan2(-dzdy, dzdx);
-        const hs = Math.max(0, cosA*Math.cos(slope) + sinA*Math.sin(slope)*Math.cos(az-aspect));
-        // Normalize so flat surfaces = white (no multiply effect); shadows darken
-        const norm = Math.min(1, hs / cosA);
-        const v = Math.round((0.15 + 0.85 * norm) * 255);
-        const i = (y * size + x) * 4;
-        out[i] = out[i+1] = out[i+2] = v;
-        out[i+3] = 255;
-      }
-    }
-    return out;
-  }
-
+  // ── TERRAIN-RGB TILES ──
   const tg = svg.select('#ie-tiles');
 
   if (typeof d3.tile === 'function') {
@@ -379,26 +345,11 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(w
     const tiles = tl();
     const {translate:[ox,oy], scale:k} = tiles;
     tiles.forEach(([tx,ty,z]) => {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.src = `https://api.maptiler.com/tiles/terrain-rgb-v2/${z}/${tx}/${ty}.webp?key=${KEY}`;
-      img.onload = () => {
-        const off = document.createElement('canvas');
-        off.width = off.height = 256;
-        const oCtx = off.getContext('2d');
-        oCtx.drawImage(img, 0, 0);
-        let px;
-        try { px = oCtx.getImageData(0, 0, 256, 256); } catch(e) { return; }
-        const hs = computeHillshade(px.data, 256, z);
-        const hImg = oCtx.createImageData(256, 256);
-        hImg.data.set(hs);
-        oCtx.putImageData(hImg, 0, 0);
-        tg.append('image')
-          .attr('href', off.toDataURL('image/png'))
-          .attr('x', (tx+ox)*k).attr('y', (ty+oy)*k)
-          .attr('width', k).attr('height', k)
-          .attr('preserveAspectRatio', 'none');
-      };
+      tg.append('image')
+        .attr('href', `https://api.maptiler.com/tiles/terrain-rgb-v2/${z}/${tx}/${ty}.webp?key=${KEY}`)
+        .attr('x', (tx+ox)*k-.5).attr('y', (ty+oy)*k-.5)
+        .attr('width', k+1).attr('height', k+1)
+        .attr('preserveAspectRatio', 'none');
     });
   }
 
