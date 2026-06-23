@@ -346,7 +346,7 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(w
     const {translate:[ox,oy], scale:k} = tiles;
     tiles.forEach(([tx,ty,z]) => {
       tg.append('image')
-        .attr('href', `https://api.maptiler.com/tiles/terrain-rgb-v2/${z}/${tx}/${ty}.webp?key=${KEY}`)
+        .attr('href', `https://api.maptiler.com/tiles/hillshade/${z}/${tx}/${ty}.webp?key=${KEY}`)
         .attr('x', (tx+ox)*k-.5).attr('y', (ty+oy)*k-.5)
         .attr('width', k+1).attr('height', k+1)
         .attr('preserveAspectRatio', 'none');
