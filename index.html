@@ -375,10 +375,12 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(w
   const terrainCanvas = document.getElementById('ie-terrain');
   const tCtx = terrainCanvas.getContext('2d');
 
+  console.log('[terrain] d3.tile available:', typeof d3.tile === 'function');
   if (typeof d3.tile === 'function') {
     const tl = d3.tile().size([W,H]).scale(SC*2*Math.PI).translate(TX);
     const tiles = tl();
     const {translate:[ox,oy], scale:k} = tiles;
+    console.log('[terrain] tile count:', tiles.length, 'scale k:', k);
     tiles.forEach(([tx,ty,z]) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
@@ -389,13 +391,20 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(w
         const oCtx = off.getContext('2d');
         oCtx.drawImage(img, 0, 0);
         let px;
-        try { px = oCtx.getImageData(0, 0, 256, 256); } catch(e) { return; }
+        try {
+          px = oCtx.getImageData(0, 0, 256, 256);
+        } catch(e) {
+          console.error('[terrain] getImageData failed (CORS?):', e.message);
+          return;
+        }
         const hs = computeHillshade(px.data, 256, z);
         const hImg = oCtx.createImageData(256, 256);
         hImg.data.set(hs);
         oCtx.putImageData(hImg, 0, 0);
         tCtx.drawImage(off, (tx+ox)*k, (ty+oy)*k, k, k);
+        console.log('[terrain] tile drawn:', tx, ty, z);
       };
+      img.onerror = e => console.error('[terrain] tile load failed:', tx, ty, z);
     });
   }
 
