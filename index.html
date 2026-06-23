@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indo-European Language Spread</title>
+<style>
+:root {
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #606060;
+  --color-text-tertiary: #9A9A9A;
+  --color-background-primary: #FFFFFF;
+  --color-background-secondary: #F0F0EE;
+  --color-border-tertiary: #E0DDD8;
+  --border-radius-lg: 12px;
+  --border-radius-md: 8px;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text-primary: #F0EFEC;
+    --color-text-secondary: #A8A8A0;
+    --color-text-tertiary: #686860;
+    --color-background-primary: #1C1C1C;
+    --color-background-secondary: #2A2A28;
+    --color-border-tertiary: #383830;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { height: 100%; }
+
+body {
+  margin: 0;
+  padding: 24px;
+  min-height: 100%;
+  background: var(--color-background-secondary);
+  font-family: var(--font-sans);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  position: relative;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  border: 0.5px solid var(--color-border-tertiary);
+  /* Fill viewport while preserving 680:460 aspect ratio */
+  width: min(calc(100vw - 48px), calc((100vh - 48px) * 680 / 460));
+  box-shadow: 0 4px 24px rgba(0,0,0,.10);
+}
+
+svg#ie { display: block; width: 100%; }
+
+.left-panel {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  /* Scale proportionally so map content always clears the panel edge */
+  width: min(218px, 32.06%);
+  background: var(--color-background-primary);
+  border-right: 0.5px solid var(--color-border-tertiary);
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.info-card {
+  position: absolute;
+  bottom: 14px; right: 14px;
+  width: 162px;
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-md);
+  padding: 10px 12px;
+  border: 0.5px solid var(--color-border-tertiary);
+  font-size: 11px;
+  display: none;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.arc { fill: none; stroke-linecap: round; }
+.bn  { cursor: pointer; }
+.bn .nd { transition: r .18s ease; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .pp { animation: ppa 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+}
+@keyframes ppa {
+  0%,100% { opacity: .08; transform: scale(1); }
+  50%      { opacity: .22; transform: scale(2.2); }
+}
+
+button {
+  padding: 4px 12px;
+  font-size: 12px;
+  border: 0.5px solid var(--color-border-tertiary);
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary);
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover { background: var(--color-border-tertiary); }
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-background-secondary);
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--color-text-secondary);
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <svg id="ie" viewBox="0 0 680 460">
+    <rect width="680" height="460" fill="#B8CCEC"/>
+    <g id="ie-land"></g>
+    <g id="ie-tiles" style="mix-blend-mode:multiply;pointer-events:none;opacity:.7"></g>
+    <g id="ie-borders"></g>
+    <g id="ie-arcs"></g>
+    <g id="ie-nodes"></g>
+  </svg>
+
+  <div class="left-panel">
+    <p style="margin:0 0 1px;font-size:13px;font-weight:500;color:var(--color-text-primary);">Language statistics</p>
+    <p style="margin:0 0 12px;font-size:11px;color:var(--color-text-tertiary);">Indo-European family</p>
+    <p style="margin:0;font-size:10px;color:var(--color-text-secondary);">Total active speakers</p>
+    <p style="margin:1px 0 0;font-size:30px;font-weight:500;color:var(--color-text-primary);line-height:1;font-variant-numeric:tabular-nums;">~3.4B</p>
+    <p style="margin:0 0 12px;font-size:10px;color:var(--color-text-tertiary);">estimated native speakers</p>
+    <div style="border-top:0.5px solid var(--color-border-tertiary);padding-top:10px;flex:1;min-height:0;overflow:hidden;">
+      <p style="margin:0 0 7px;font-size:10px;font-weight:500;color:var(--color-text-secondary);">Speakers by branch</p>
+      <div id="bars"></div>
+    </div>
+    <div style="border-top:0.5px solid var(--color-border-tertiary);padding-top:10px;margin-top:10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+        <span style="font-size:10px;color:var(--color-text-secondary);">Year</span>
+        <span id="yr-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);font-variant-numeric:tabular-nums;">3500 BCE</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="range" id="slider" min="-3500" max="2000" value="-3500" oninput="setYear(+this.value)">
+        <button id="play-btn" onclick="togglePlay()">▶</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-card" id="info"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-tile@1/dist/d3-tile.min.js"></script>
+<script>
+// Get a free key at https://maptiler.com — paste it here for hillshade terrain tiles
+const KEY = 'YOUR_MAPTILER_KEY_HERE';
+const W = 680, H = 460, SC = 290;
+const TX = [249, 480];
+const OC = '#B8CCEC';
+
+const proj = d3.geoMercator().scale(SC).translate(TX);
+const gp   = d3.geoPath().projection(proj);
+
+/* ==================================================
+   TERRAIN POLYGONS — 5 elevation tiers
+   Colors march from dark (mountain zone) to light (peaks):
+   land #E8E4D8 → foothill #D4C9B0 → mountain #B8A888 →
+   highMtn #CCCABE → alpine #E4E0D4 → peak #F4F2EE
+================================================== */
+const TERRAIN = [
+  // FOOTHILLS #D4C9B0
+  ['#D4C9B0', [[-4,41.5],[4,43.8],[4,42],[-4,41],[-4,41.5]]],
+  ['#D4C9B0', [[7,55],[24,71],[28,70],[18,63],[10,56],[7,55]]],
+  ['#D4C9B0', [[15,44.5],[29,50],[31,44.5],[16,43],[15,44.5]]],
+  ['#D4C9B0', [[-5,33.5],[12,36],[12,33.5],[-4,33],[-5,33.5]]],
+  ['#D4C9B0', [[42,14],[54,26],[60,22],[46,12],[42,14]]],
+  ['#D4C9B0', [[56,54],[63,68],[65,68],[62,51],[56,51],[56,54]]],
+  ['#D4C9B0', [[73,12],[82,24],[84,22],[76,11],[73,12]]],
+  ['#D4C9B0', [[44,27],[58,40],[62,36],[52,25],[44,27]]],
+  ['#D4C9B0', [[24,35],[42,41],[44,38],[26,34],[24,35]]],
+  ['#D4C9B0', [[60,26],[68,38],[72,36],[64,24],[60,26]]],
+
+  // MOUNTAIN #B8A888 — clearly distinct olive-tan
+  ['#B8A888', [[-1.5,42.5],[4,44.2],[4,42.8],[0,42],[-1.5,42.5]]],
+  ['#B8A888', [[4.5,43.2],[16.5,47.4],[18,45.2],[13,43.2],[5,43],[4.5,43.2]]],
+  ['#B8A888', [[36,39.5],[52,44],[54,41.5],[38,38.5],[36,39.5]]],
+  ['#B8A888', [[0,34.5],[8,35.8],[8,33.8],[0,33.5],[0,34.5]]],
+  ['#B8A888', [[8,57.5],[18,70],[22,70],[20,65],[10,58],[8,57.5]]],
+  ['#B8A888', [[48,34.5],[64,38.5],[66,36],[52,33.5],[48,34.5]]],
+  ['#B8A888', [[26,37],[40,41.8],[42,38.5],[28,36],[26,37]]],
+  ['#B8A888', [[48,27.5],[58,39],[62,35.5],[54,25.5],[48,27.5]]],
+  ['#B8A888', [[60,28],[78,38.5],[82,33.5],[66,27],[60,28]]],
+  ['#B8A888', [[68,35.5],[90,44.5],[94,41.5],[72,33.5],[68,35.5]]],
+  ['#B8A888', [[80,44.5],[102,52.5],[104,48],[82,43],[80,44.5]]],
+  ['#B8A888', [[44,13.5],[54,25],[58,21.5],[48,12],[44,13.5]]],
+
+  // HIGH MOUNTAIN #CCCABE — cooler gray
+  ['#CCCABE', [[5.5,44],[15.5,47.2],[17,45.5],[12.5,43.5],[6,43.5],[5.5,44]]],
+  ['#CCCABE', [[39,40.5],[50,43.5],[52,41.5],[41,39.5],[39,40.5]]],
+  ['#CCCABE', [[62,29],[78,38],[82,33],[68,27],[62,29]]],
+  ['#CCCABE', [[70,26.5],[90,30.5],[95,27.5],[82,24.5],[70,26.5]]],
+  ['#CCCABE', [[78,29],[105,35],[107,30],[83,26],[78,29]]],
+  ['#CCCABE', [[70,37.5],[88,44],[92,41.5],[74,35.5],[70,37.5]]],
+
+  // ALPINE #E4E0D4 — near-snow
+  ['#E4E0D4', [[6.5,44.8],[14.5,47],[16,46.2],[12.5,44.2],[7,44.5],[6.5,44.8]]],
+  ['#E4E0D4', [[41,41.5],[47.5,43.2],[50,42],[43,40.5],[41,41.5]]],
+  ['#E4E0D4', [[64,30],[78,37.5],[81,33.5],[70,28],[64,30]]],
+  ['#E4E0D4', [[72,27.5],[89,30.5],[94,28],[84,25.5],[72,27.5]]],
+  ['#E4E0D4', [[81,30],[104,34.5],[106,31],[84,28],[81,30]]],
+
+  // PEAK #F4F2EE — ice and glaciers
+  ['#F4F2EE', [[7.5,45.5],[14,47],[15,46.6],[12.2,44.8],[7.8,45.3],[7.5,45.5]]],
+  ['#F4F2EE', [[74.5,28],[87.5,30],[90,27.5],[82,25.8],[74.5,28]]],
+  ['#F4F2EE', [[85,31.5],[102,34],[102,31.5],[86,29.5],[85,31.5]]],
+];
+
+const WATER = [
+  [[49,47],[54.5,47],[54.5,36.5],[49,36.5],[49,47]],
+  [[27.5,43.5],[38.5,43.5],[39,41],[27.5,41],[27.5,43.5]],
+  [[59,47],[63,47],[63,44],[59,44],[59,47]],
+  [[35,30],[38,30],[38,28],[35,28],[35,30]],
+];
+
+const RIVERS = [
+  [[47.5,51.5],[50.5,46],[48,45.5],[46,48]],
+  [[38,37.5],[42.5,35],[44,33],[46.5,31]],
+  [[40.5,38],[43,36],[47,33.5]],
+  [[74,37],[72,32],[68.5,26]],
+  [[80,29],[84,27],[90,23.5],[90.5,22]],
+  [[36.5,14],[33,18],[31,30],[32,31]],
+  [[40.5,54],[39,49.5],[41,47.5]],
+  [[71,37],[64.5,38.5],[58.5,38.5]],
+  [[8,47.5],[18.5,48.5],[28,45.5],[30.5,45.5]],
+  [[26,48.5],[32,46],[31,46]],
+  [[14,64],[18,60],[20,57]],
+];
+
+const BRANCHES = [
+  {id:'anatolian',  name:'Anatolian',       ex:true,  dy:-3000,ay:-2500,col:'#A87E10',lx:12, ly:4,  la:'start',  spk:0,    dest:[34,38.5],
+   desc:'First to separate (~3000 BCE). Hittite is the oldest attested IE language. Extinct c. 400 CE.',
+   langs:'Hittite, Luwian, Lydian, Lycian'},
+  {id:'tocharian',  name:'Tocharian',        ex:true,  dy:-2500,ay:-1800,col:'#7060A8',lx:12, ly:4,  la:'start',  spk:0,    dest:[84,41],
+   desc:'Easternmost branch, yet paradoxically showing "western" features. Manuscripts found in Xinjiang. Extinct c. 9th century CE.',
+   langs:'Tocharian A (Agnean), Tocharian B (Kuchean)'},
+  {id:'indo-iranian',name:'Indo-Iranian',    ex:false, dy:-2200,ay:-1500,col:'#B86A08',lx:12, ly:4,  la:'start',  spk:1400, dest:[68,30],
+   desc:'Largest IE branch. Splits into Indo-Aryan (~900M) and Iranian (~300M) sub-branches. Sanskrit is its oldest attested form.',
+   langs:'Hindi, Urdu, Bengali, Persian, Pashto, Kurdish, Nepali'},
+  {id:'balto-slavic',name:'Balto-Slavic',   ex:false, dy:-1500,ay:-900, col:'#3A20A8',lx:0,  ly:-13,la:'middle', spk:320,  dest:[28,52],
+   desc:'Split into Baltic and Slavic sub-branches around 500 BCE. Slavic alone has ~300M speakers.',
+   langs:'Russian, Polish, Ukrainian, Czech, Serbian, Lithuanian, Latvian'},
+  {id:'armenian',   name:'Armenian',         ex:false, dy:-1500,ay:-1000,col:'#A00848',lx:12, ly:4,  la:'start',  spk:7,    dest:[44,40.5],
+   desc:'An isolated branch. A distinct Armenian script was devised in 405 CE by Mesrop Mashtots.',
+   langs:'Classical Armenian, Eastern Armenian, Western Armenian'},
+  {id:'hellenic',   name:'Hellenic',          ex:false, dy:-1800,ay:-1400,col:'#0E50B0',lx:-12,ly:4,  la:'end',    spk:13,   dest:[22,38],
+   desc:'Ancient Greek shaped Western philosophy. The New Testament was composed in Koine Greek.',
+   langs:'Mycenaean Greek †, Ancient Greek, Koine Greek, Modern Greek'},
+  {id:'italic',     name:'Italic / Romance',  ex:false, dy:-1400,ay:-900, col:'#A82010',lx:-12,ly:4,  la:'end',    spk:900,  dest:[12,43],
+   desc:'Latin\'s descendants. Roman conquest and European colonialism spread Romance languages worldwide.',
+   langs:'Spanish, French, Portuguese, Italian, Romanian, Catalan'},
+  {id:'celtic',     name:'Celtic',            ex:false, dy:-1300,ay:-700, col:'#226810',lx:12, ly:4,  la:'start',  spk:2,    dest:[-4,52],
+   desc:'Once dominant across Europe — Gaul, Iberia, Anatolia. Now mainly confined to the Atlantic fringe.',
+   langs:'Welsh, Irish, Scottish Gaelic, Breton, Cornish'},
+  {id:'germanic',   name:'Germanic',          ex:false, dy:-1200,ay:-700, col:'#087858',lx:0,  ly:-13,la:'middle', spk:520,  dest:[12,56],
+   desc:'English has become the most widely spoken non-native language in history, with ~1.5 billion users.',
+   langs:'English, German, Dutch, Swedish, Norwegian, Danish, Icelandic'},
+  {id:'albanian',   name:'Albanian',          ex:false, dy:-1000,ay:-500, col:'#076878',lx:-12,ly:14, la:'end',    spk:8,    dest:[20,41.5],
+   desc:'An independent branch. Two major dialects: Gheg (north) and Tosk (south).',
+   langs:'Gheg Albanian, Tosk Albanian'},
+];
+
+let curY = -3500, playing = false, timer = null;
+const PIE = proj([47, 47]);
+
+function arc([x1,y1],[x2,y2]){
+  const mx=(x1+x2)/2, my=(y1+y2)/2, d=Math.hypot(x2-x1, y2-y1);
+  return `M${x1},${y1} Q${mx},${my-d*0.28} ${x2},${y2}`;
+}
+
+// Build speaker bars
+const barsEl = document.getElementById('bars');
+[...BRANCHES].filter(b=>!b.ex).sort((a,b)=>b.spk-a.spk).forEach(b=>{
+  const pct = Math.max(b.spk/1400*100, 1.5);
+  const lbl = b.spk>=1000 ? `${(b.spk/1000).toFixed(1)}B` : `${b.spk}M`;
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;align-items:center;gap:4px;margin-bottom:5px;cursor:pointer;';
+  row.innerHTML = `<span style="font-size:9px;min-width:64px;color:var(--color-text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.name}</span><div style="flex:1;background:var(--color-background-secondary);border-radius:3px;height:5px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:${b.col};border-radius:3px;"></div></div><span style="font-size:9px;min-width:26px;text-align:right;color:var(--color-text-tertiary);">${lbl}</span>`;
+  row.addEventListener('click', ()=>showInfo(b));
+  barsEl.appendChild(row);
+});
+
+d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world=>{
+  const land    = topojson.merge(world, world.objects.countries.geometries);
+  const borders = topojson.mesh(world, world.objects.countries, (a,b)=>a!==b);
+  const grat    = d3.geoGraticule().step([20,20])();
+
+  const svg = d3.select('svg#ie');
+  const lg  = svg.select('#ie-land');
+
+  // Graticule
+  lg.append('path').datum(grat).attr('d',gp)
+    .attr('fill','none').attr('stroke','#A8BADE').attr('stroke-width','.3');
+
+  // Land shadow (dramatic depth)
+  lg.append('path').datum(land).attr('d',gp).attr('fill','#586080').attr('transform','translate(0,6)');
+  // Land base
+  lg.append('path').datum(land).attr('d',gp).attr('fill','#E8E4D8');
+
+  // Terrain polygons
+  TERRAIN.forEach(([fill, c])=>{
+    const f = {type:'Feature', geometry:{type:'Polygon', coordinates:[c]}};
+    lg.append('path').datum(f).attr('d',gp).attr('fill',fill);
+  });
+
+  // Interior water
+  WATER.forEach(c=>{
+    const f = {type:'Feature', geometry:{type:'Polygon', coordinates:[c]}};
+    lg.append('path').datum(f).attr('d',gp).attr('fill',OC);
+  });
+
+  // Rivers
+  RIVERS.forEach(coords=>{
+    const f = {type:'Feature', geometry:{type:'LineString', coordinates:coords}};
+    lg.append('path').datum(f).attr('d',gp)
+      .attr('fill','none').attr('stroke','#8AAECE').attr('stroke-width','.9').attr('stroke-opacity','.65');
+  });
+
+  // ── HILLSHADE TILES (SVG <image>, display-only — no CORS restriction) ──
+  const tg = svg.select('#ie-tiles');
+  let tilesAdded = false;
+  try {
+    if (typeof d3.tile === 'function') {
+      const tl = d3.tile().size([W,H]).scale(SC*2*Math.PI).translate(TX);
+      const tiles = tl();
+      const {translate:[ox,oy], scale:k} = tiles;
+      tiles.forEach(([tx,ty,z])=>{
+        tg.append('image')
+          .attr('href', `https://api.maptiler.com/tiles/hillshade/${z}/${tx}/${ty}.png?key=${KEY}`)
+          .attr('x', (tx+ox)*k-.5).attr('y', (ty+oy)*k-.5)
+          .attr('width', k+1).attr('height', k+1)
+          .attr('preserveAspectRatio','none');
+      });
+      tilesAdded = true;
+    }
+  } catch(e) {}
+
+  // Hardcoded z=3 fallback (pre-computed for SC=290, TX=[249,480])
+  if (!tilesAdded) {
+    const z=3, tw=228;
+    [[3,0,21,-431,228,455],[4,0,249,-431,228,455],[5,0,477,-431,228,455],
+     [3,1,21,24,228,228],[4,1,249,24,228,228],[5,1,477,24,228,228],
+     [3,2,21,252,228,114],[4,2,249,252,228,114],[5,2,477,252,228,114],
+     [3,3,21,366,228,114],[4,3,249,366,228,114],[5,3,477,366,228,114]]
+    .forEach(([tx,ty,x,y,w,h])=>{
+      tg.append('image')
+        .attr('href', `https://api.maptiler.com/tiles/hillshade/${z}/${tx}/${ty}.png?key=${KEY}`)
+        .attr('x',x).attr('y',y).attr('width',w).attr('height',h)
+        .attr('preserveAspectRatio','none');
+    });
+  }
+
+  // Country borders
+  svg.select('#ie-borders').append('path').datum(borders).attr('d',gp)
+    .attr('fill','none').attr('stroke','#B8B4A2').attr('stroke-width','.5');
+
+  // Arcs
+  const ag = svg.select('#ie-arcs');
+  BRANCHES.forEach(b=>{
+    b.ep = proj(b.dest);
+    const el = ag.append('path').attr('id','arc-'+b.id).attr('class','arc')
+      .attr('d', arc(PIE, b.ep)).attr('stroke', b.col)
+      .attr('stroke-width', b.ex ? 1.8 : 2.5).attr('stroke-opacity', b.ex ? .45 : .9);
+    b.len = el.node().getTotalLength();
+    el.attr('stroke-dasharray', b.len).attr('stroke-dashoffset', b.len);
+  });
+
+  // Nodes
+  const ng = svg.select('#ie-nodes');
+
+  // PIE homeland
+  const pg = ng.append('g').attr('transform', `translate(${PIE[0]},${PIE[1]})`);
+  pg.append('circle').attr('class','pp').attr('r',24).attr('fill','#4820A0').attr('fill-opacity',.12);
+  pg.append('circle').attr('r',10).attr('fill','#4820A0').attr('stroke','#F5F2FF').attr('stroke-width',2.5);
+  pg.append('text').attr('y',-17).attr('text-anchor','middle')
+    .attr('font-family','var(--font-sans)').attr('font-size',10.5).attr('font-weight','600')
+    .attr('fill','#2A1460').attr('stroke','#E8E4D8').attr('stroke-width',3.5).attr('paint-order','stroke fill')
+    .text('PIE homeland');
+
+  BRANCHES.forEach(b=>{
+    const g = ng.append('g').attr('id','node-'+b.id).attr('class','bn')
+      .attr('transform', `translate(${b.ep[0]},${b.ep[1]})`).attr('opacity',0)
+      .on('click', ()=>showInfo(b))
+      .on('mouseenter', function(){ d3.select(this).select('.nd').attr('r',9); })
+      .on('mouseleave', function(){ d3.select(this).select('.nd').attr('r',7); });
+    g.append('circle').attr('class','nd').attr('r',7)
+      .attr('fill',b.col).attr('fill-opacity',b.ex?.55:1)
+      .attr('stroke','white').attr('stroke-width',2.2);
+    g.append('text').attr('x',b.lx).attr('y',b.ly)
+      .attr('text-anchor',b.la).attr('dominant-baseline','middle')
+      .attr('font-family','var(--font-sans)').attr('font-size',10).attr('font-weight','500')
+      .attr('fill', b.ex ? '#807060' : '#141414')
+      .attr('stroke','#E8E4D8').attr('stroke-width',3).attr('paint-order','stroke fill')
+      .text(b.name + (b.ex?' †':''));
+  });
+
+  setYear(-3500);
+});
+
+function setYear(yr) {
+  yr = +yr; curY = yr;
+  document.getElementById('slider').value = yr;
+  document.getElementById('yr-label').textContent =
+    yr < 0 ? `${Math.abs(yr)} BCE` : yr === 0 ? '1 CE' : `${yr} CE`;
+
+  BRANCHES.forEach(b=>{
+    if (!b.len) return;
+    const pe = document.getElementById('arc-'+b.id);
+    const ne = d3.select('#node-'+b.id);
+    const sp = b.ay - b.dy;
+    if (yr < b.dy) {
+      pe.setAttribute('stroke-dashoffset', b.len);
+      ne.attr('opacity', 0);
+    } else if (yr >= b.ay) {
+      pe.setAttribute('stroke-dashoffset', 0);
+      ne.attr('opacity', 1);
+    } else {
+      const t = (yr - b.dy) / sp;
+      pe.setAttribute('stroke-dashoffset', b.len * (1-t));
+      ne.attr('opacity', t > .8 ? (t-.8)/.2 : 0);
+    }
+  });
+}
+
+function togglePlay() {
+  if (playing) {
+    clearInterval(timer); playing = false;
+    document.getElementById('play-btn').textContent = '▶';
+    return;
+  }
+  if (curY >= 2000) setYear(-3500);
+  playing = true;
+  document.getElementById('play-btn').textContent = '⏸';
+  timer = setInterval(()=>{
+    if (curY >= 2000) { clearInterval(timer); playing = false; document.getElementById('play-btn').textContent='▶'; return; }
+    setYear(curY + 25);
+  }, 40);
+}
+
+function showInfo(b) {
+  const yr   = b.dy < 0 ? `c. ${Math.abs(b.dy)} BCE` : `${b.dy} CE`;
+  const ext  = b.ex ? ` <span style="font-size:9px;color:var(--color-text-tertiary);">extinct</span>` : '';
+  const card = document.getElementById('info');
+  card.style.display = 'block';
+  card.innerHTML = `
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
+      <span style="width:11px;height:11px;border-radius:3px;background:${b.col};opacity:${b.ex?.62:1};flex-shrink:0;display:inline-block;"></span>
+      <strong style="font-size:11px;color:var(--color-text-primary);">${b.name}</strong>${ext}
+    </div>
+    <p style="margin:0 0 3px;font-size:9px;color:var(--color-text-tertiary);">Diverged ${yr}</p>
+    <p style="margin:0 0 6px;font-size:10px;line-height:1.5;color:var(--color-text-secondary);">${b.desc}</p>
+    <p style="margin:0;padding-top:5px;border-top:0.5px solid var(--color-border-tertiary);font-size:9px;color:var(--color-text-tertiary);">
+      <strong style="color:var(--color-text-secondary);">Languages:</strong> ${b.langs}
+    </p>`;
+}
+</script>
+</body>
+</html>
