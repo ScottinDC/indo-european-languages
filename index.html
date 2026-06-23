@@ -132,8 +132,8 @@ input[type=range]::-webkit-slider-thumb {
     <g id="ie-borders"></g>
     <g id="ie-arcs"></g>
     <g id="ie-nodes"></g>
+    <g id="ie-tiles" style="mix-blend-mode:multiply;pointer-events:none;opacity:.7"></g>
   </svg>
-  <canvas id="ie-terrain" width="680" height="460" style="position:absolute;top:0;left:0;width:100%;height:100%;mix-blend-mode:multiply;opacity:0.7;pointer-events:none;"></canvas>
 
   <div class="left-panel">
     <p style="margin:0 0 1px;font-size:13px;font-weight:500;color:var(--color-text-primary);">Language statistics</p>
@@ -372,15 +372,12 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(w
     return out;
   }
 
-  const terrainCanvas = document.getElementById('ie-terrain');
-  const tCtx = terrainCanvas.getContext('2d');
+  const tg = svg.select('#ie-tiles');
 
-  console.log('[terrain] d3.tile available:', typeof d3.tile === 'function');
   if (typeof d3.tile === 'function') {
     const tl = d3.tile().size([W,H]).scale(SC*2*Math.PI).translate(TX);
     const tiles = tl();
     const {translate:[ox,oy], scale:k} = tiles;
-    console.log('[terrain] tile count:', tiles.length, 'scale k:', k);
     tiles.forEach(([tx,ty,z]) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
@@ -391,20 +388,17 @@ d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(w
         const oCtx = off.getContext('2d');
         oCtx.drawImage(img, 0, 0);
         let px;
-        try {
-          px = oCtx.getImageData(0, 0, 256, 256);
-        } catch(e) {
-          console.error('[terrain] getImageData failed (CORS?):', e.message);
-          return;
-        }
+        try { px = oCtx.getImageData(0, 0, 256, 256); } catch(e) { return; }
         const hs = computeHillshade(px.data, 256, z);
         const hImg = oCtx.createImageData(256, 256);
         hImg.data.set(hs);
         oCtx.putImageData(hImg, 0, 0);
-        tCtx.drawImage(off, (tx+ox)*k, (ty+oy)*k, k, k);
-        console.log('[terrain] tile drawn:', tx, ty, z);
+        tg.append('image')
+          .attr('href', off.toDataURL('image/png'))
+          .attr('x', (tx+ox)*k).attr('y', (ty+oy)*k)
+          .attr('width', k).attr('height', k)
+          .attr('preserveAspectRatio', 'none');
       };
-      img.onerror = e => console.error('[terrain] tile load failed:', tx, ty, z);
     });
   }
 
