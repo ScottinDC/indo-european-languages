@@ -145,19 +145,19 @@ input[type=range]::-webkit-slider-thumb {
   </svg>
 
   <div class="left-panel">
-    <p style="margin:0 0 1px;font-size:13px;font-weight:500;color:var(--color-text-primary);">Language statistics</p>
-    <p style="margin:0 0 12px;font-size:11px;color:var(--color-text-tertiary);">Indo-European family</p>
-    <p style="margin:0;font-size:10px;color:var(--color-text-secondary);">Total active speakers</p>
-    <p style="margin:1px 0 0;font-size:30px;font-weight:500;color:var(--color-text-primary);line-height:1;font-variant-numeric:tabular-nums;">~3.4B</p>
-    <p style="margin:0 0 12px;font-size:10px;color:var(--color-text-tertiary);">estimated native speakers</p>
+    <p style="margin:0 0 2px;font-size:16px;font-weight:500;color:var(--color-text-primary);">Language statistics</p>
+    <p style="margin:0 0 12px;font-size:13px;color:var(--color-text-tertiary);">Indo-European family</p>
+    <p style="margin:0;font-size:12px;color:var(--color-text-secondary);">Total active speakers</p>
+    <p style="margin:1px 0 0;font-size:32px;font-weight:500;color:var(--color-text-primary);line-height:1;font-variant-numeric:tabular-nums;">~3.4B</p>
+    <p style="margin:0 0 12px;font-size:12px;color:var(--color-text-tertiary);">estimated native speakers</p>
     <div style="border-top:0.5px solid var(--color-border-tertiary);padding-top:10px;flex:1;min-height:0;overflow:hidden;">
-      <p style="margin:0 0 7px;font-size:10px;font-weight:500;color:var(--color-text-secondary);">Speakers by branch</p>
+      <p style="margin:0 0 8px;font-size:12px;font-weight:500;color:var(--color-text-secondary);">Speakers by branch</p>
       <div id="bars"></div>
     </div>
     <div style="border-top:0.5px solid var(--color-border-tertiary);padding-top:10px;margin-top:10px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
-        <span style="font-size:10px;color:var(--color-text-secondary);">Year</span>
-        <span id="yr-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);font-variant-numeric:tabular-nums;">3500 BCE</span>
+        <span style="font-size:12px;color:var(--color-text-secondary);">Year</span>
+        <span id="yr-label" style="font-size:15px;font-weight:500;color:var(--color-text-primary);font-variant-numeric:tabular-nums;">3500 BCE</span>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <input type="range" id="slider" min="-3500" max="2000" value="-3500" oninput="setYear(+this.value)">
@@ -221,7 +221,7 @@ const barsEl = document.getElementById('bars');
   const lbl = b.spk>=1000 ? `${(b.spk/1000).toFixed(1)}B` : `${b.spk}M`;
   const row = document.createElement('div');
   row.style.cssText = 'display:flex;align-items:center;gap:4px;margin-bottom:5px;cursor:pointer;';
-  row.innerHTML = `<span style="font-size:9px;min-width:64px;color:var(--color-text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.name}</span><div style="flex:1;background:var(--color-background-secondary);border-radius:3px;height:5px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:${b.col};border-radius:3px;"></div></div><span style="font-size:9px;min-width:26px;text-align:right;color:var(--color-text-tertiary);">${lbl}</span>`;
+  row.innerHTML = `<span style="font-size:11px;min-width:72px;color:var(--color-text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.name}</span><div style="flex:1;background:var(--color-background-secondary);border-radius:3px;height:6px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:${b.col};border-radius:3px;"></div></div><span style="font-size:11px;min-width:30px;text-align:right;color:var(--color-text-tertiary);">${lbl}</span>`;
   row.addEventListener('click', ()=>showInfo(b));
   barsEl.appendChild(row);
 });
@@ -264,7 +264,7 @@ map.on('load', () => {
   pg.append('circle').attr('class','pp').attr('r',24).attr('fill','#4820A0').attr('fill-opacity',.12);
   pg.append('circle').attr('r',10).attr('fill','#4820A0').attr('stroke','#F5F2FF').attr('stroke-width',2.5);
   pg.append('text').attr('y',-17).attr('text-anchor','middle')
-    .attr('font-family','var(--font-sans)').attr('font-size',10.5).attr('font-weight','600')
+    .attr('font-family','var(--font-sans)').attr('font-size',12.5).attr('font-weight','600')
     .attr('fill','#2A1460').attr('stroke','rgba(255,255,255,0.85)').attr('stroke-width',3.5).attr('paint-order','stroke fill')
     .text('PIE homeland');
 
@@ -289,7 +289,7 @@ map.on('load', () => {
       .attr('stroke','white').attr('stroke-width',2.2);
     g.append('text').attr('x',b.lx).attr('y',b.ly)
       .attr('text-anchor',b.la).attr('dominant-baseline','middle')
-      .attr('font-family','var(--font-sans)').attr('font-size',10).attr('font-weight','500')
+      .attr('font-family','var(--font-sans)').attr('font-size',12).attr('font-weight','500')
       .attr('fill', b.ex ? '#807060' : '#141414')
       .attr('stroke','rgba(255,255,255,0.85)').attr('stroke-width',3).attr('paint-order','stroke fill')
       .text(b.name + (b.ex?' †':''));
