@@ -162,6 +162,7 @@ map.on('load', () => {
     "id": "language-regions-fill",
     "type": "fill",
     "source": "language-regions",
+    "slot": "top",
     "paint": {
       "fill-color": [
         "match", ["get", "region_type"],
@@ -183,6 +184,7 @@ map.on('load', () => {
     "id": "language-regions-outline",
     "type": "line",
     "source": "language-regions",
+    "slot": "top",
     "paint": {
       "line-color": "#333333",
       "line-opacity": 0.22,
@@ -194,6 +196,7 @@ map.on('load', () => {
     "id": "language-edges-line",
     "type": "line",
     "source": "language-edges",
+    "slot": "top",
     "paint": {
       "line-color": [
         "match", ["get", "category"],
@@ -215,6 +218,7 @@ map.on('load', () => {
     "id": "language-points-circle",
     "type": "circle",
     "source": "language-points",
+    "slot": "top",
     "paint": {
       "circle-color": [
         "match", ["get", "category"],
