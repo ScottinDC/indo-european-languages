@@ -219,10 +219,39 @@ map.on('load', () => {
   Promise.all([
     fetch('./us_language_json_objects/language_regions.geojson').then(r => { if (!r.ok) throw new Error('Regions 404'); return r.json(); }),
     fetch('./us_language_json_objects/language_edges.geojson').then(r => { if (!r.ok) throw new Error('Edges 404'); return r.json(); }),
-    fetch('./us_language_json_objects/language_points.geojson').then(r => { if (!r.ok) throw new Error('Points 404'); return r.json(); })
+    fetch('./us_language_json_objects/language_points.geojson').then(r => { if (!r.ok) throw new Error('Points 404'); return r.json(); }),
+    fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json').then(r => r.json())
   ])
-  .then(([regionsData, edgesData, pointsData]) => {
+  .then(([regionsData, edgesData, pointsData, statesData]) => {
     
+    // Map regions to actual US state boundaries!
+    const stateRegions = { type: "FeatureCollection", features: [] };
+    
+    regionsData.features.forEach(region => {
+      statesData.features.forEach(state => {
+        // Find if the state is primarily within the region's bounding box.
+        // Checking the centroid is a fast and robust way to see if the state "fits" the region.
+        const center = turf.centroid(state);
+        // We also check a few points on the bounding box of the state just to be safe for weirdly shaped states
+        const bbox = turf.bbox(state);
+        const centerLeft = turf.point([bbox[0], center.geometry.coordinates[1]]);
+        const centerRight = turf.point([bbox[2], center.geometry.coordinates[1]]);
+        const centerBottom = turf.point([center.geometry.coordinates[0], bbox[1]]);
+        
+        const inRegion = turf.booleanPointInPolygon(center, region) || 
+                         turf.booleanPointInPolygon(centerLeft, region) || 
+                         turf.booleanPointInPolygon(centerRight, region) ||
+                         turf.booleanPointInPolygon(centerBottom, region);
+                         
+        if (inRegion) {
+          // Clone the state geometry but attach the region's properties!
+          const mappedState = JSON.parse(JSON.stringify(state));
+          mappedState.properties = region.properties;
+          stateRegions.features.push(mappedState);
+        }
+      });
+    });
+
     // Process edges to be curved instead of straight
     const curvedEdges = {
       type: "FeatureCollection",
@@ -249,11 +278,11 @@ map.on('load', () => {
     };
 
     // Sources
-    map.addSource('language-regions', { type: 'geojson', data: regionsData });
+    map.addSource('language-regions', { type: 'geojson', data: stateRegions }); // Using state boundaries instead of big boxes!
     map.addSource('language-edges', { type: 'geojson', data: curvedEdges });
     map.addSource('language-points', { type: 'geojson', data: pointsData });
 
-    // 1. Regions Fill (removed outline layer entirely for softer look)
+    // 1. Regions Fill
     map.addLayer({
       "id": "language-regions-fill",
       "type": "fill",
@@ -274,6 +303,27 @@ map.on('load', () => {
           0, 0.08,
           1, 0.28
         ]
+      }
+    });
+
+    // 1.5. Regions Outline (Add a soft outline to the states for crispness)
+    map.addLayer({
+      "id": "language-regions-outline",
+      "type": "line",
+      "source": "language-regions",
+      "slot": "top",
+      "paint": {
+        "line-color": [
+          "match", ["get", "region_type"],
+          "phonetic_shift_zone", "#4e79a7",
+          "phonetic_convergence_zone", "#59a14f",
+          "lexical_hub_zone", "#f28e2b",
+          "regional_lexical_zone", "#f28e2b",
+          "lexical_and_convergence_zone", "#9c755f",
+          "#ff0000"
+        ],
+        "line-width": 1.5,
+        "line-opacity": 0.35
       }
     });
 
