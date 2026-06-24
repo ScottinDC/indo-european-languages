@@ -1,0 +1,313 @@
+{
+  "type": "FeatureCollection",
+  "name": "language_regions",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -124.8,
+              32.0
+            ],
+            [
+              -117.0,
+              32.0
+            ],
+            [
+              -116.0,
+              49.0
+            ],
+            [
+              -124.8,
+              49.0
+            ],
+            [
+              -124.8,
+              32.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "region_id": "west_coast",
+        "name": "West Coast",
+        "region_type": "lexical_and_convergence_zone",
+        "primary_features": [
+          "online_lexical_innovation",
+          "low_back_merger"
+        ],
+        "boundary_type": "approximate",
+        "confidence": 0.55,
+        "description": "Coastal cultural and technology/media corridor associated with rapid lexical spread and broad low-back merger patterns in many communities."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -93.5,
+              40.0
+            ],
+            [
+              -77.0,
+              40.0
+            ],
+            [
+              -76.0,
+              46.5
+            ],
+            [
+              -90.5,
+              47.5
+            ],
+            [
+              -93.5,
+              40.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "region_id": "inland_north",
+        "name": "Urban Inland North",
+        "region_type": "phonetic_shift_zone",
+        "primary_features": [
+          "ncvs"
+        ],
+        "boundary_type": "approximate",
+        "confidence": 0.6,
+        "description": "Approximate Inland North zone where the Northern Cities Vowel Shift has been especially associated with urban centers."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -106.0,
+              25.5
+            ],
+            [
+              -75.0,
+              25.5
+            ],
+            [
+              -75.0,
+              37.5
+            ],
+            [
+              -93.0,
+              38.0
+            ],
+            [
+              -106.0,
+              34.0
+            ],
+            [
+              -106.0,
+              25.5
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "region_id": "south",
+        "name": "The South",
+        "region_type": "phonetic_shift_zone",
+        "primary_features": [
+          "southern_vowel_shift"
+        ],
+        "boundary_type": "approximate",
+        "confidence": 0.5,
+        "description": "Broad Southern zone associated with Southern vowel features. Internal variation is high, so this should be rendered as a soft region."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -97.5,
+              25.0
+            ],
+            [
+              -80.0,
+              25.0
+            ],
+            [
+              -80.0,
+              32.8
+            ],
+            [
+              -89.5,
+              33.5
+            ],
+            [
+              -97.5,
+              30.5
+            ],
+            [
+              -97.5,
+              25.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "region_id": "deep_south_gulf",
+        "name": "Deep South and Gulf Coast",
+        "region_type": "regional_lexical_zone",
+        "primary_features": [
+          "southern_vowel_shift",
+          "online_lexical_innovation"
+        ],
+        "boundary_type": "approximate",
+        "confidence": 0.45,
+        "description": "Region where localized vocabulary and Southern phonetic patterns can be represented as dense intra-regional clusters before wider diffusion."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -80.5,
+              36.5
+            ],
+            [
+              -73.0,
+              36.5
+            ],
+            [
+              -73.0,
+              41.8
+            ],
+            [
+              -78.0,
+              41.8
+            ],
+            [
+              -80.5,
+              39.0
+            ],
+            [
+              -80.5,
+              36.5
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "region_id": "mid_atlantic",
+        "name": "Mid-Atlantic",
+        "region_type": "lexical_hub_zone",
+        "primary_features": [
+          "mid_atlantic_lexical_zone",
+          "online_lexical_innovation"
+        ],
+        "boundary_type": "approximate",
+        "confidence": 0.5,
+        "description": "Independent lexical innovation zone radiating from Philadelphia, Baltimore, and Washington-area urban clusters."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -82.0,
+              39.0
+            ],
+            [
+              -66.5,
+              39.0
+            ],
+            [
+              -66.5,
+              47.5
+            ],
+            [
+              -76.0,
+              47.5
+            ],
+            [
+              -82.0,
+              42.0
+            ],
+            [
+              -82.0,
+              39.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "region_id": "northeast",
+        "name": "Northeast",
+        "region_type": "lexical_and_legacy_dialect_zone",
+        "primary_features": [
+          "online_lexical_innovation",
+          "low_back_merger"
+        ],
+        "boundary_type": "approximate",
+        "confidence": 0.45,
+        "description": "Dense media and population corridor with rapid lexical diffusion and several older local dialect distinctions."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -124.8,
+              31.0
+            ],
+            [
+              -101.0,
+              31.0
+            ],
+            [
+              -101.0,
+              49.0
+            ],
+            [
+              -124.8,
+              49.0
+            ],
+            [
+              -124.8,
+              31.0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "region_id": "west",
+        "name": "The West",
+        "region_type": "phonetic_convergence_zone",
+        "primary_features": [
+          "low_back_merger"
+        ],
+        "boundary_type": "approximate",
+        "confidence": 0.5,
+        "description": "Broad western convergence zone where cot-caught merger is common in many communities."
+      }
+    }
+  ]
+}

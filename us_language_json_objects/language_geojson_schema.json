@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "US Language Diffusion GeoJSON Feature Schema",
+  "description": "Validation schema for point and edge properties used in the language diffusion map.",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "FeatureCollection"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "geometry",
+          "properties"
+        ],
+        "properties": {
+          "type": {
+            "const": "Feature"
+          },
+          "geometry": {
+            "type": "object"
+          },
+          "properties": {
+            "type": "object",
+            "required": [
+              "feature_id",
+              "category",
+              "data_status"
+            ],
+            "properties": {
+              "feature_id": {
+                "type": "string"
+              },
+              "category": {
+                "enum": [
+                  "phonetic_shift",
+                  "phonetic_convergence",
+                  "lexical_diffusion",
+                  "dialect_region"
+                ]
+              },
+              "year": {
+                "type": "integer"
+              },
+              "year_start": {
+                "type": "integer"
+              },
+              "year_end": {
+                "type": "integer"
+              },
+              "intensity_score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "strength": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "data_status": {
+                "enum": [
+                  "measured",
+                  "estimated",
+                  "illustrative"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

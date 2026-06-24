@@ -1,0 +1,456 @@
+{
+  "type": "FeatureCollection",
+  "name": "language_edges",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -118.2437,
+            34.0522
+          ],
+          [
+            -74.006,
+            40.7128
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "LEX-LAX-NYC-2012",
+        "from": "Los Angeles",
+        "to": "New York",
+        "feature_id": "online_lexical_innovation",
+        "category": "lexical_diffusion",
+        "year_start": 2012,
+        "year_end": 2013,
+        "relationship": "high-cultural-connectivity",
+        "expected_diffusion_speed": "fast",
+        "strength": 0.91,
+        "description": "Illustrative rapid online lexical jump between coastal media hubs.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -122.4194,
+            37.7749
+          ],
+          [
+            -74.006,
+            40.7128
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "LEX-SFO-NYC-2012",
+        "from": "San Francisco",
+        "to": "New York",
+        "feature_id": "online_lexical_innovation",
+        "category": "lexical_diffusion",
+        "year_start": 2012,
+        "year_end": 2013,
+        "relationship": "technology-media corridor",
+        "expected_diffusion_speed": "fast",
+        "strength": 0.88,
+        "description": "Illustrative tech/media corridor diffusion.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -118.2437,
+            34.0522
+          ],
+          [
+            -122.3321,
+            47.6062
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "LEX-LAX-SEA-2012",
+        "from": "Los Angeles",
+        "to": "Seattle",
+        "feature_id": "online_lexical_innovation",
+        "category": "lexical_diffusion",
+        "year_start": 2012,
+        "year_end": 2012,
+        "relationship": "west-coast corridor",
+        "expected_diffusion_speed": "fast",
+        "strength": 0.77,
+        "description": "Illustrative West Coast lexical diffusion corridor.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.006,
+            40.7128
+          ],
+          [
+            -75.1652,
+            39.9526
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "LEX-NYC-PHL-2013",
+        "from": "New York",
+        "to": "Philadelphia",
+        "feature_id": "online_lexical_innovation",
+        "category": "lexical_diffusion",
+        "year_start": 2013,
+        "year_end": 2013,
+        "relationship": "northeast urban corridor",
+        "expected_diffusion_speed": "medium",
+        "strength": 0.68,
+        "description": "Illustrative Northeast corridor diffusion.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -75.1652,
+            39.9526
+          ],
+          [
+            -76.6122,
+            39.2904
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "LEX-PHL-BAL-2013",
+        "from": "Philadelphia",
+        "to": "Baltimore",
+        "feature_id": "mid_atlantic_lexical_zone",
+        "category": "lexical_diffusion",
+        "year_start": 2013,
+        "year_end": 2013,
+        "relationship": "mid-atlantic corridor",
+        "expected_diffusion_speed": "medium",
+        "strength": 0.63,
+        "description": "Illustrative Mid-Atlantic local spread.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -76.6122,
+            39.2904
+          ],
+          [
+            -77.0369,
+            38.9072
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "LEX-BAL-WAS-2013",
+        "from": "Baltimore",
+        "to": "Washington",
+        "feature_id": "mid_atlantic_lexical_zone",
+        "category": "lexical_diffusion",
+        "year_start": 2013,
+        "year_end": 2013,
+        "relationship": "mid-atlantic corridor",
+        "expected_diffusion_speed": "medium",
+        "strength": 0.61,
+        "description": "Illustrative Mid-Atlantic local spread.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.006,
+            40.7128
+          ],
+          [
+            -84.388,
+            33.749
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "LEX-NYC-ATL-2014",
+        "from": "New York",
+        "to": "Atlanta",
+        "feature_id": "online_lexical_innovation",
+        "category": "lexical_diffusion",
+        "year_start": 2013,
+        "year_end": 2014,
+        "relationship": "national metro network",
+        "expected_diffusion_speed": "fast",
+        "strength": 0.72,
+        "description": "Illustrative metro-to-metro lexical spread.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -84.388,
+            33.749
+          ],
+          [
+            -90.0715,
+            29.9511
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "LEX-ATL-NOLA-2014",
+        "from": "Atlanta",
+        "to": "New Orleans",
+        "feature_id": "online_lexical_innovation",
+        "category": "lexical_diffusion",
+        "year_start": 2014,
+        "year_end": 2014,
+        "relationship": "southern and gulf corridor",
+        "expected_diffusion_speed": "medium",
+        "strength": 0.58,
+        "description": "Illustrative regional lexical spread in the South/Gulf Coast.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -118.2437,
+            34.0522
+          ],
+          [
+            -95.3698,
+            29.7604
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "LEX-LAX-HOU-2014",
+        "from": "Los Angeles",
+        "to": "Houston",
+        "feature_id": "online_lexical_innovation",
+        "category": "lexical_diffusion",
+        "year_start": 2012,
+        "year_end": 2014,
+        "relationship": "large metro network",
+        "expected_diffusion_speed": "fast",
+        "strength": 0.7,
+        "description": "Illustrative metro network diffusion.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -74.006,
+            40.7128
+          ],
+          [
+            -87.6298,
+            41.8781
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "LEX-NYC-CHI-2014",
+        "from": "New York",
+        "to": "Chicago",
+        "feature_id": "online_lexical_innovation",
+        "category": "lexical_diffusion",
+        "year_start": 2013,
+        "year_end": 2014,
+        "relationship": "large metro network",
+        "expected_diffusion_speed": "fast",
+        "strength": 0.74,
+        "description": "Illustrative metro network diffusion.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -87.6298,
+            41.8781
+          ],
+          [
+            -83.0458,
+            42.3314
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "NCVS-CHI-DET-1980",
+        "from": "Chicago",
+        "to": "Detroit",
+        "feature_id": "ncvs",
+        "category": "phonetic_shift",
+        "year_start": 1980,
+        "year_end": 1995,
+        "relationship": "regional urban corridor",
+        "expected_diffusion_speed": "slow",
+        "strength": 0.66,
+        "description": "Illustrative regional association for NCVS urban centers.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -83.0458,
+            42.3314
+          ],
+          [
+            -81.6944,
+            41.4993
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "NCVS-DET-CLE-1990",
+        "from": "Detroit",
+        "to": "Cleveland",
+        "feature_id": "ncvs",
+        "category": "phonetic_shift",
+        "year_start": 1990,
+        "year_end": 1995,
+        "relationship": "regional urban corridor",
+        "expected_diffusion_speed": "slow",
+        "strength": 0.6,
+        "description": "Illustrative regional association for NCVS urban centers.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -81.6944,
+            41.4993
+          ],
+          [
+            -78.8784,
+            42.8864
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "NCVS-CLE-BUF-1990",
+        "from": "Cleveland",
+        "to": "Buffalo",
+        "feature_id": "ncvs",
+        "category": "phonetic_shift",
+        "year_start": 1990,
+        "year_end": 1995,
+        "relationship": "regional urban corridor",
+        "expected_diffusion_speed": "slow",
+        "strength": 0.57,
+        "description": "Illustrative regional association for NCVS urban centers.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -86.7816,
+            36.1627
+          ],
+          [
+            -86.8104,
+            33.5186
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "SVS-NSH-BHM-1990",
+        "from": "Nashville",
+        "to": "Birmingham",
+        "feature_id": "southern_vowel_shift",
+        "category": "phonetic_shift",
+        "year_start": 1990,
+        "year_end": 2000,
+        "relationship": "southern regional corridor",
+        "expected_diffusion_speed": "slow",
+        "strength": 0.63,
+        "description": "Illustrative regional association for Southern vowel-shift centers.",
+        "data_status": "illustrative"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -84.388,
+            33.749
+          ],
+          [
+            -80.8431,
+            35.2271
+          ]
+        ]
+      },
+      "properties": {
+        "edge_id": "SVS-ATL-CLT-2000",
+        "from": "Atlanta",
+        "to": "Charlotte",
+        "feature_id": "southern_vowel_shift",
+        "category": "phonetic_shift",
+        "year_start": 1990,
+        "year_end": 2000,
+        "relationship": "southern urban corridor",
+        "expected_diffusion_speed": "slow",
+        "strength": 0.55,
+        "description": "Illustrative regional association for Southern vowel-shift centers.",
+        "data_status": "illustrative"
+      }
+    }
+  ]
+}

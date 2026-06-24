@@ -1,0 +1,201 @@
+{
+  "metadata": {
+    "title": "United States Language Feature Catalog",
+    "version": "1.0",
+    "note": "This catalog defines the language features used by the map. It combines phonetic shifts, phonetic convergence, and lexical diffusion categories. Replace illustrative descriptions/intensities with measured values when empirical data is available."
+  },
+  "categories": [
+    {
+      "category_id": "phonetic_shift",
+      "label": "Phonetic shift",
+      "description": "A long-term regional sound change, usually measured through pronunciation or acoustic data.",
+      "typical_time_scale": "decades"
+    },
+    {
+      "category_id": "phonetic_convergence",
+      "label": "Phonetic convergence",
+      "description": "A sound change that reduces older regional contrasts, such as merging previously distinct vowel classes.",
+      "typical_time_scale": "decades"
+    },
+    {
+      "category_id": "lexical_diffusion",
+      "label": "Lexical diffusion",
+      "description": "The spread of words, slang, spelling variants, or terminology across social and geographic networks.",
+      "typical_time_scale": "days_to_years"
+    },
+    {
+      "category_id": "dialect_region",
+      "label": "Dialect region",
+      "description": "A broad area where multiple linguistic features cluster together. Boundaries are approximate, not hard borders.",
+      "typical_time_scale": "historical_to_present"
+    }
+  ],
+  "features": [
+    {
+      "feature_id": "ncvs",
+      "name": "Northern Cities Vowel Shift",
+      "category": "phonetic_shift",
+      "aliases": [
+        "NCVS",
+        "Inland North vowel shift"
+      ],
+      "time_scale": "decades",
+      "diffusion_type": "regional_chain_shift",
+      "primary_regions": [
+        "inland_north"
+      ],
+      "primary_hubs": [
+        "Chicago",
+        "Detroit",
+        "Cleveland",
+        "Buffalo",
+        "Rochester"
+      ],
+      "status": "regional_divergence",
+      "plain_language_summary": "A chain shift associated with many Inland North cities, involving changes to vowels in words such as cat, cot, bet, bit, and bus.",
+      "map_behavior": "Represent as clustered regional points with high intensity in Inland North urban centers. Use gradual timeline changes rather than rapid jumps.",
+      "suggested_visual_encoding": {
+        "color_key": "phonetic_shift",
+        "preferred_layers": [
+          "points",
+          "regions"
+        ],
+        "animation_speed": "slow"
+      }
+    },
+    {
+      "feature_id": "southern_vowel_shift",
+      "name": "Southern Vowel Shift",
+      "category": "phonetic_shift",
+      "aliases": [
+        "SVS"
+      ],
+      "time_scale": "decades",
+      "diffusion_type": "regional_chain_shift",
+      "primary_regions": [
+        "south",
+        "deep_south_gulf"
+      ],
+      "primary_hubs": [
+        "Atlanta",
+        "Nashville",
+        "Birmingham",
+        "Dallas",
+        "New Orleans"
+      ],
+      "status": "regional_divergence",
+      "plain_language_summary": "A major Southern chain shift involving features such as glide weakening in words like my and hide and related front-vowel changes.",
+      "map_behavior": "Represent as a broad Southern region with varying city intensity rather than a single origin point.",
+      "suggested_visual_encoding": {
+        "color_key": "phonetic_shift",
+        "preferred_layers": [
+          "points",
+          "regions"
+        ],
+        "animation_speed": "slow"
+      }
+    },
+    {
+      "feature_id": "low_back_merger",
+      "name": "Low-Back Merger / Cot-Caught Merger",
+      "category": "phonetic_convergence",
+      "aliases": [
+        "cot-caught merger",
+        "low back merger"
+      ],
+      "time_scale": "decades",
+      "diffusion_type": "broad_convergence",
+      "primary_regions": [
+        "west",
+        "midwest",
+        "northeast_selected"
+      ],
+      "primary_hubs": [
+        "Los Angeles",
+        "San Francisco",
+        "Denver",
+        "Seattle",
+        "Pittsburgh",
+        "Boston"
+      ],
+      "status": "national_convergence",
+      "plain_language_summary": "A merger in which words like cot and caught, or don and dawn, are pronounced the same by many speakers.",
+      "map_behavior": "Represent as a broad convergence gradient, with points showing local merger strength.",
+      "suggested_visual_encoding": {
+        "color_key": "phonetic_convergence",
+        "preferred_layers": [
+          "points",
+          "regions"
+        ],
+        "animation_speed": "medium"
+      }
+    },
+    {
+      "feature_id": "online_lexical_innovation",
+      "name": "Online Lexical Innovation",
+      "category": "lexical_diffusion",
+      "aliases": [
+        "slang spread",
+        "digital lexical diffusion"
+      ],
+      "time_scale": "days_to_years",
+      "diffusion_type": "network_jump",
+      "primary_regions": [
+        "west_coast",
+        "northeast",
+        "mid_atlantic",
+        "deep_south_gulf"
+      ],
+      "primary_hubs": [
+        "Los Angeles",
+        "San Francisco",
+        "Seattle",
+        "New York",
+        "Philadelphia",
+        "Atlanta",
+        "New Orleans"
+      ],
+      "status": "rapid_spread",
+      "plain_language_summary": "The spread of new words or written variants through online and cultural networks, often jumping between highly connected cities instead of moving steadily across space.",
+      "map_behavior": "Represent with origin points, metro-to-metro edges, and fast timeline animation.",
+      "suggested_visual_encoding": {
+        "color_key": "lexical_diffusion",
+        "preferred_layers": [
+          "points",
+          "edges"
+        ],
+        "animation_speed": "fast"
+      }
+    },
+    {
+      "feature_id": "mid_atlantic_lexical_zone",
+      "name": "Mid-Atlantic Lexical Innovation Zone",
+      "category": "lexical_diffusion",
+      "aliases": [
+        "Mid-Atlantic written variation"
+      ],
+      "time_scale": "years",
+      "diffusion_type": "regional_hub_diffusion",
+      "primary_regions": [
+        "mid_atlantic"
+      ],
+      "primary_hubs": [
+        "Philadelphia",
+        "Baltimore",
+        "Washington"
+      ],
+      "status": "regional_innovation",
+      "plain_language_summary": "An independent zone of written or lexical innovation radiating from Mid-Atlantic metro clusters.",
+      "map_behavior": "Represent as hub points linked to nearby urban corridors.",
+      "suggested_visual_encoding": {
+        "color_key": "lexical_diffusion",
+        "preferred_layers": [
+          "points",
+          "edges",
+          "regions"
+        ],
+        "animation_speed": "medium"
+      }
+    }
+  ]
+}

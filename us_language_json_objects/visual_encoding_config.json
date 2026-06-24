@@ -1,0 +1,87 @@
+{
+  "metadata": {
+    "title": "Language Diffusion Visual Encoding Config",
+    "version": "1.0",
+    "description": "Use this file to keep styling logic separate from data."
+  },
+  "category_colors": {
+    "phonetic_shift": "#4e79a7",
+    "phonetic_convergence": "#59a14f",
+    "lexical_diffusion": "#f28e2b",
+    "dialect_region": "#9c755f",
+    "default": "#999999"
+  },
+  "point_encoding": {
+    "radius_property": "intensity_score",
+    "radius_range_px": [
+      4,
+      22
+    ],
+    "opacity_property": "intensity_score",
+    "opacity_range": [
+      0.35,
+      0.85
+    ],
+    "color_property": "category",
+    "stroke_color": "#ffffff",
+    "stroke_width_px": 1
+  },
+  "edge_encoding": {
+    "width_property": "strength",
+    "width_range_px": [
+      1,
+      7
+    ],
+    "opacity": 0.48,
+    "color_property": "category",
+    "dash_by_speed": {
+      "fast": [
+        1,
+        0
+      ],
+      "medium": [
+        2,
+        1
+      ],
+      "slow": [
+        3,
+        2
+      ]
+    }
+  },
+  "region_encoding": {
+    "fill_color_property": "primary_features[0] category lookup",
+    "fill_opacity_property": "confidence",
+    "fill_opacity_range": [
+      0.08,
+      0.2
+    ],
+    "outline_color": "#333333",
+    "outline_opacity": 0.25
+  },
+  "timeline": {
+    "min_year": 1970,
+    "max_year": 2020,
+    "default_year": 2012,
+    "point_filter": "feature.properties.year <= selectedYear",
+    "edge_filter": "feature.properties.year_start <= selectedYear",
+    "region_filter": "always visible unless feature toggle is active"
+  },
+  "legend": [
+    {
+      "label": "Phonetic shift",
+      "category": "phonetic_shift",
+      "meaning": "Regional sound changes that unfold slowly over decades."
+    },
+    {
+      "label": "Phonetic convergence",
+      "category": "phonetic_convergence",
+      "meaning": "Sound changes that reduce older regional distinctions."
+    },
+    {
+      "label": "Lexical diffusion",
+      "category": "lexical_diffusion",
+      "meaning": "Words or written variants spreading through social and metro networks."
+    }
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "metadata": {
+    "title": "Suggested Mapbox GL JS Layer Configuration",
+    "version": "1.0",
+    "description": "These layer objects can be adapted directly inside map.addLayer(). They assume sources named language-regions, language-edges, and language-points."
+  },
+  "sources": {
+    "language-regions": {
+      "type": "geojson",
+      "data": "data/language_regions.geojson"
+    },
+    "language-edges": {
+      "type": "geojson",
+      "data": "data/language_edges.geojson"
+    },
+    "language-points": {
+      "type": "geojson",
+      "data": "data/language_points.geojson"
+    }
+  },
+  "layers": [
+    {
+      "id": "language-regions-fill",
+      "type": "fill",
+      "source": "language-regions",
+      "paint": {
+        "fill-color": [
+          "match",
+          [
+            "get",
+            "region_type"
+          ],
+          "phonetic_shift_zone",
+          "#4e79a7",
+          "phonetic_convergence_zone",
+          "#59a14f",
+          "lexical_hub_zone",
+          "#f28e2b",
+          "regional_lexical_zone",
+          "#f28e2b",
+          "#999999"
+        ],
+        "fill-opacity": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "get",
+            "confidence"
+          ],
+          0,
+          0.06,
+          1,
+          0.2
+        ]
+      }
+    },
+    {
+      "id": "language-regions-outline",
+      "type": "line",
+      "source": "language-regions",
+      "paint": {
+        "line-color": "#333333",
+        "line-opacity": 0.22,
+        "line-width": 1
+      }
+    },
+    {
+      "id": "language-edges-line",
+      "type": "line",
+      "source": "language-edges",
+      "paint": {
+        "line-color": [
+          "match",
+          [
+            "get",
+            "category"
+          ],
+          "phonetic_shift",
+          "#4e79a7",
+          "phonetic_convergence",
+          "#59a14f",
+          "lexical_diffusion",
+          "#f28e2b",
+          "#999999"
+        ],
+        "line-width": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "get",
+            "strength"
+          ],
+          0,
+          1,
+          1,
+          7
+        ],
+        "line-opacity": 0.48
+      }
+    },
+    {
+      "id": "language-points-circle",
+      "type": "circle",
+      "source": "language-points",
+      "paint": {
+        "circle-color": [
+          "match",
+          [
+            "get",
+            "category"
+          ],
+          "phonetic_shift",
+          "#4e79a7",
+          "phonetic_convergence",
+          "#59a14f",
+          "lexical_diffusion",
+          "#f28e2b",
+          "#999999"
+        ],
+        "circle-radius": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "get",
+            "intensity_score"
+          ],
+          0,
+          4,
+          1,
+          22
+        ],
+        "circle-opacity": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "get",
+            "intensity_score"
+          ],
+          0,
+          0.35,
+          1,
+          0.85
+        ],
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 1
+      }
+    }
+  ]
+}

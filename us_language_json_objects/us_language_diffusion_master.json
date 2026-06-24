@@ -1,0 +1,58 @@
+{
+  "metadata": {
+    "title": "United States Language Diffusion Model",
+    "version": "1.1",
+    "description": "Master configuration object for a Mapbox + D3 visualization of language spread in the United States.",
+    "coordinate_system": "WGS84 / GeoJSON longitude-latitude",
+    "data_note": "This package is map-ready but conceptually illustrative. Replace illustrative intensity_score and strength values with measured corpus, acoustic, survey, or field-interview data before presenting it as empirical research."
+  },
+  "files": {
+    "feature_catalog": "language_feature_catalog.json",
+    "points_geojson": "language_points.geojson",
+    "edges_geojson": "language_edges.geojson",
+    "regions_geojson": "language_regions.geojson",
+    "visual_encoding": "visual_encoding_config.json",
+    "mapbox_layers": "mapbox_layer_config.json",
+    "data_schema": "language_geojson_schema.json",
+    "sources": "sources.json"
+  },
+  "recommended_interaction_model": {
+    "primary_controls": [
+      "feature toggle",
+      "year slider",
+      "category legend",
+      "city popup"
+    ],
+    "default_visible_layers": [
+      "language-regions-fill",
+      "language-edges-line",
+      "language-points-circle"
+    ],
+    "default_selected_year": 2012,
+    "default_selected_features": [
+      "ncvs",
+      "southern_vowel_shift",
+      "low_back_merger",
+      "online_lexical_innovation"
+    ]
+  },
+  "map_explanation_for_users": "Large circles show where a language feature is strongest. Lines show likely diffusion paths between connected cities. Transparent regions show broad dialect zones. The timeline shows when a feature appears, intensifies, or spreads.",
+  "core_principles": [
+    {
+      "id": "network_over_distance",
+      "summary": "Language diffusion often follows communication networks rather than simple physical distance."
+    },
+    {
+      "id": "soft_boundaries",
+      "summary": "Dialect regions should be represented as soft zones, not hard borders."
+    },
+    {
+      "id": "separate_feature_types",
+      "summary": "Phonetic shifts, phonetic convergence, and lexical diffusion should be filterable because they spread at different speeds."
+    },
+    {
+      "id": "evidence_points_first",
+      "summary": "Points should represent observed or sampled locations. Polygons should provide context, not overstate precision."
+    }
+  ]
+}

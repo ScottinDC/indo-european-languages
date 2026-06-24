@@ -1,0 +1,750 @@
+{
+  "type": "FeatureCollection",
+  "name": "language_points",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.6298,
+          41.8781
+        ]
+      },
+      "properties": {
+        "point_id": "US-IL-CHI-NCVS-1980",
+        "city": "Chicago",
+        "state": "IL",
+        "year": 1980,
+        "feature_id": "ncvs",
+        "feature_name": "Northern Cities Vowel Shift",
+        "category": "phonetic_shift",
+        "intensity_score": 0.68,
+        "dominant_variant": "short-a raising",
+        "diffusion_status": "regional_divergence",
+        "data_status": "illustrative",
+        "description": "Inland North urban center with strong illustrative NCVS intensity."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.6298,
+          41.8781
+        ]
+      },
+      "properties": {
+        "point_id": "US-IL-CHI-NCVS-1995",
+        "city": "Chicago",
+        "state": "IL",
+        "year": 1995,
+        "feature_id": "ncvs",
+        "feature_name": "Northern Cities Vowel Shift",
+        "category": "phonetic_shift",
+        "intensity_score": 0.82,
+        "dominant_variant": "short-a raising and short-o fronting",
+        "diffusion_status": "regional_divergence",
+        "data_status": "illustrative",
+        "description": "Stronger illustrative NCVS intensity in the mid-1990s."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.0458,
+          42.3314
+        ]
+      },
+      "properties": {
+        "point_id": "US-MI-DET-NCVS-1995",
+        "city": "Detroit",
+        "state": "MI",
+        "year": 1995,
+        "feature_id": "ncvs",
+        "feature_name": "Northern Cities Vowel Shift",
+        "category": "phonetic_shift",
+        "intensity_score": 0.78,
+        "dominant_variant": "fronting and raising in chain shift",
+        "diffusion_status": "regional_divergence",
+        "data_status": "illustrative",
+        "description": "Illustrative NCVS point in Detroit."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.6944,
+          41.4993
+        ]
+      },
+      "properties": {
+        "point_id": "US-OH-CLE-NCVS-1995",
+        "city": "Cleveland",
+        "state": "OH",
+        "year": 1995,
+        "feature_id": "ncvs",
+        "feature_name": "Northern Cities Vowel Shift",
+        "category": "phonetic_shift",
+        "intensity_score": 0.7,
+        "dominant_variant": "chain-shift vowel rotation",
+        "diffusion_status": "regional_divergence",
+        "data_status": "illustrative",
+        "description": "Illustrative NCVS point in Cleveland."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.8784,
+          42.8864
+        ]
+      },
+      "properties": {
+        "point_id": "US-NY-BUF-NCVS-1995",
+        "city": "Buffalo",
+        "state": "NY",
+        "year": 1995,
+        "feature_id": "ncvs",
+        "feature_name": "Northern Cities Vowel Shift",
+        "category": "phonetic_shift",
+        "intensity_score": 0.74,
+        "dominant_variant": "chain-shift vowel rotation",
+        "diffusion_status": "regional_divergence",
+        "data_status": "illustrative",
+        "description": "Illustrative NCVS point in Buffalo."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.6088,
+          43.1566
+        ]
+      },
+      "properties": {
+        "point_id": "US-NY-ROC-NCVS-1995",
+        "city": "Rochester",
+        "state": "NY",
+        "year": 1995,
+        "feature_id": "ncvs",
+        "feature_name": "Northern Cities Vowel Shift",
+        "category": "phonetic_shift",
+        "intensity_score": 0.72,
+        "dominant_variant": "chain-shift vowel rotation",
+        "diffusion_status": "regional_divergence",
+        "data_status": "illustrative",
+        "description": "Illustrative NCVS point in Rochester."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.9065,
+          43.0389
+        ]
+      },
+      "properties": {
+        "point_id": "US-WI-MKE-NCVS-1995",
+        "city": "Milwaukee",
+        "state": "WI",
+        "year": 1995,
+        "feature_id": "ncvs",
+        "feature_name": "Northern Cities Vowel Shift",
+        "category": "phonetic_shift",
+        "intensity_score": 0.62,
+        "dominant_variant": "Inland North vowel patterning",
+        "diffusion_status": "regional_divergence",
+        "data_status": "illustrative",
+        "description": "Illustrative NCVS point in Milwaukee."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.388,
+          33.749
+        ]
+      },
+      "properties": {
+        "point_id": "US-GA-ATL-SVS-1990",
+        "city": "Atlanta",
+        "state": "GA",
+        "year": 1990,
+        "feature_id": "southern_vowel_shift",
+        "feature_name": "Southern Vowel Shift",
+        "category": "phonetic_shift",
+        "intensity_score": 0.66,
+        "dominant_variant": "long-i glide weakening",
+        "diffusion_status": "regional_divergence",
+        "data_status": "illustrative",
+        "description": "Illustrative Southern Vowel Shift point in Atlanta."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.7816,
+          36.1627
+        ]
+      },
+      "properties": {
+        "point_id": "US-TN-NSH-SVS-1990",
+        "city": "Nashville",
+        "state": "TN",
+        "year": 1990,
+        "feature_id": "southern_vowel_shift",
+        "feature_name": "Southern Vowel Shift",
+        "category": "phonetic_shift",
+        "intensity_score": 0.72,
+        "dominant_variant": "long-i monophthongization",
+        "diffusion_status": "regional_divergence",
+        "data_status": "illustrative",
+        "description": "Illustrative Southern Vowel Shift point in Nashville."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.8104,
+          33.5186
+        ]
+      },
+      "properties": {
+        "point_id": "US-AL-BHM-SVS-1990",
+        "city": "Birmingham",
+        "state": "AL",
+        "year": 1990,
+        "feature_id": "southern_vowel_shift",
+        "feature_name": "Southern Vowel Shift",
+        "category": "phonetic_shift",
+        "intensity_score": 0.76,
+        "dominant_variant": "front-vowel shift and glide weakening",
+        "diffusion_status": "regional_divergence",
+        "data_status": "illustrative",
+        "description": "Illustrative Southern Vowel Shift point in Birmingham."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -96.797,
+          32.7767
+        ]
+      },
+      "properties": {
+        "point_id": "US-TX-DAL-SVS-2000",
+        "city": "Dallas",
+        "state": "TX",
+        "year": 2000,
+        "feature_id": "southern_vowel_shift",
+        "feature_name": "Southern Vowel Shift",
+        "category": "phonetic_shift",
+        "intensity_score": 0.6,
+        "dominant_variant": "Southern vowel patterning",
+        "diffusion_status": "regional_divergence",
+        "data_status": "illustrative",
+        "description": "Illustrative Southern Vowel Shift point in Dallas."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0715,
+          29.9511
+        ]
+      },
+      "properties": {
+        "point_id": "US-LA-NOLA-SVS-2000",
+        "city": "New Orleans",
+        "state": "LA",
+        "year": 2000,
+        "feature_id": "southern_vowel_shift",
+        "feature_name": "Southern Vowel Shift",
+        "category": "phonetic_shift",
+        "intensity_score": 0.58,
+        "dominant_variant": "Southern vowel patterning with local variation",
+        "diffusion_status": "regional_divergence",
+        "data_status": "illustrative",
+        "description": "Illustrative Southern Vowel Shift point in New Orleans."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.8431,
+          35.2271
+        ]
+      },
+      "properties": {
+        "point_id": "US-NC-CLT-SVS-2000",
+        "city": "Charlotte",
+        "state": "NC",
+        "year": 2000,
+        "feature_id": "southern_vowel_shift",
+        "feature_name": "Southern Vowel Shift",
+        "category": "phonetic_shift",
+        "intensity_score": 0.55,
+        "dominant_variant": "Southern vowel patterning",
+        "diffusion_status": "regional_divergence",
+        "data_status": "illustrative",
+        "description": "Illustrative Southern Vowel Shift point in Charlotte."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -118.2437,
+          34.0522
+        ]
+      },
+      "properties": {
+        "point_id": "US-CA-LAX-LBM-2000",
+        "city": "Los Angeles",
+        "state": "CA",
+        "year": 2000,
+        "feature_id": "low_back_merger",
+        "feature_name": "Low-Back Merger / Cot-Caught Merger",
+        "category": "phonetic_convergence",
+        "intensity_score": 0.82,
+        "dominant_variant": "cot-caught merger",
+        "diffusion_status": "national_convergence",
+        "data_status": "illustrative",
+        "description": "Illustrative low-back merger point in Los Angeles."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.4194,
+          37.7749
+        ]
+      },
+      "properties": {
+        "point_id": "US-CA-SFO-LBM-2000",
+        "city": "San Francisco",
+        "state": "CA",
+        "year": 2000,
+        "feature_id": "low_back_merger",
+        "feature_name": "Low-Back Merger / Cot-Caught Merger",
+        "category": "phonetic_convergence",
+        "intensity_score": 0.84,
+        "dominant_variant": "cot-caught merger",
+        "diffusion_status": "national_convergence",
+        "data_status": "illustrative",
+        "description": "Illustrative low-back merger point in San Francisco."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.3321,
+          47.6062
+        ]
+      },
+      "properties": {
+        "point_id": "US-WA-SEA-LBM-2000",
+        "city": "Seattle",
+        "state": "WA",
+        "year": 2000,
+        "feature_id": "low_back_merger",
+        "feature_name": "Low-Back Merger / Cot-Caught Merger",
+        "category": "phonetic_convergence",
+        "intensity_score": 0.88,
+        "dominant_variant": "cot-caught merger",
+        "diffusion_status": "national_convergence",
+        "data_status": "illustrative",
+        "description": "Illustrative low-back merger point in Seattle."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -104.9903,
+          39.7392
+        ]
+      },
+      "properties": {
+        "point_id": "US-CO-DEN-LBM-2005",
+        "city": "Denver",
+        "state": "CO",
+        "year": 2005,
+        "feature_id": "low_back_merger",
+        "feature_name": "Low-Back Merger / Cot-Caught Merger",
+        "category": "phonetic_convergence",
+        "intensity_score": 0.78,
+        "dominant_variant": "cot-caught merger",
+        "diffusion_status": "national_convergence",
+        "data_status": "illustrative",
+        "description": "Illustrative low-back merger point in Denver."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.9959,
+          40.4406
+        ]
+      },
+      "properties": {
+        "point_id": "US-PA-PIT-LBM-2005",
+        "city": "Pittsburgh",
+        "state": "PA",
+        "year": 2005,
+        "feature_id": "low_back_merger",
+        "feature_name": "Low-Back Merger / Cot-Caught Merger",
+        "category": "phonetic_convergence",
+        "intensity_score": 0.8,
+        "dominant_variant": "cot-caught merger",
+        "diffusion_status": "national_convergence",
+        "data_status": "illustrative",
+        "description": "Illustrative low-back merger point in Pittsburgh."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.0589,
+          42.3601
+        ]
+      },
+      "properties": {
+        "point_id": "US-MA-BOS-LBM-2010",
+        "city": "Boston",
+        "state": "MA",
+        "year": 2010,
+        "feature_id": "low_back_merger",
+        "feature_name": "Low-Back Merger / Cot-Caught Merger",
+        "category": "phonetic_convergence",
+        "intensity_score": 0.5,
+        "dominant_variant": "partial or variable merger",
+        "diffusion_status": "national_convergence",
+        "data_status": "illustrative",
+        "description": "Illustrative low-back merger point in Boston; local patterns vary."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -93.265,
+          44.9778
+        ]
+      },
+      "properties": {
+        "point_id": "US-MN-MSP-LBM-2010",
+        "city": "Minneapolis",
+        "state": "MN",
+        "year": 2010,
+        "feature_id": "low_back_merger",
+        "feature_name": "Low-Back Merger / Cot-Caught Merger",
+        "category": "phonetic_convergence",
+        "intensity_score": 0.68,
+        "dominant_variant": "cot-caught merger tendency",
+        "diffusion_status": "national_convergence",
+        "data_status": "illustrative",
+        "description": "Illustrative low-back merger point in Minneapolis."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -118.2437,
+          34.0522
+        ]
+      },
+      "properties": {
+        "point_id": "US-CA-LAX-LEX-2012",
+        "city": "Los Angeles",
+        "state": "CA",
+        "year": 2012,
+        "feature_id": "online_lexical_innovation",
+        "feature_name": "Online Lexical Innovation",
+        "category": "lexical_diffusion",
+        "intensity_score": 0.95,
+        "dominant_variant": "coastal metro-origin lexical spread",
+        "diffusion_status": "rapid_spread",
+        "data_status": "illustrative",
+        "description": "Illustrative origin-like point for rapid online lexical diffusion."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.4194,
+          37.7749
+        ]
+      },
+      "properties": {
+        "point_id": "US-CA-SFO-LEX-2012",
+        "city": "San Francisco",
+        "state": "CA",
+        "year": 2012,
+        "feature_id": "online_lexical_innovation",
+        "feature_name": "Online Lexical Innovation",
+        "category": "lexical_diffusion",
+        "intensity_score": 0.9,
+        "dominant_variant": "technology and media network spread",
+        "diffusion_status": "rapid_spread",
+        "data_status": "illustrative",
+        "description": "Illustrative West Coast lexical diffusion hub."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.3321,
+          47.6062
+        ]
+      },
+      "properties": {
+        "point_id": "US-WA-SEA-LEX-2012",
+        "city": "Seattle",
+        "state": "WA",
+        "year": 2012,
+        "feature_id": "online_lexical_innovation",
+        "feature_name": "Online Lexical Innovation",
+        "category": "lexical_diffusion",
+        "intensity_score": 0.82,
+        "dominant_variant": "technology and media network spread",
+        "diffusion_status": "rapid_spread",
+        "data_status": "illustrative",
+        "description": "Illustrative Pacific Northwest lexical diffusion hub."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.006,
+          40.7128
+        ]
+      },
+      "properties": {
+        "point_id": "US-NY-NYC-LEX-2013",
+        "city": "New York",
+        "state": "NY",
+        "year": 2013,
+        "feature_id": "online_lexical_innovation",
+        "feature_name": "Online Lexical Innovation",
+        "category": "lexical_diffusion",
+        "intensity_score": 0.93,
+        "dominant_variant": "media corridor adoption",
+        "diffusion_status": "rapid_spread",
+        "data_status": "illustrative",
+        "description": "Illustrative high-connectivity receiving and amplifying hub."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.1652,
+          39.9526
+        ]
+      },
+      "properties": {
+        "point_id": "US-PA-PHL-LEX-2013",
+        "city": "Philadelphia",
+        "state": "PA",
+        "year": 2013,
+        "feature_id": "online_lexical_innovation",
+        "feature_name": "Online Lexical Innovation",
+        "category": "lexical_diffusion",
+        "intensity_score": 0.7,
+        "dominant_variant": "Mid-Atlantic network adoption",
+        "diffusion_status": "regional_innovation",
+        "data_status": "illustrative",
+        "description": "Illustrative Mid-Atlantic lexical diffusion point."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.6122,
+          39.2904
+        ]
+      },
+      "properties": {
+        "point_id": "US-MD-BAL-LEX-2013",
+        "city": "Baltimore",
+        "state": "MD",
+        "year": 2013,
+        "feature_id": "mid_atlantic_lexical_zone",
+        "feature_name": "Mid-Atlantic Lexical Innovation Zone",
+        "category": "lexical_diffusion",
+        "intensity_score": 0.66,
+        "dominant_variant": "Mid-Atlantic local innovation",
+        "diffusion_status": "regional_innovation",
+        "data_status": "illustrative",
+        "description": "Illustrative Baltimore lexical innovation point."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0369,
+          38.9072
+        ]
+      },
+      "properties": {
+        "point_id": "US-DC-WAS-LEX-2013",
+        "city": "Washington",
+        "state": "DC",
+        "year": 2013,
+        "feature_id": "mid_atlantic_lexical_zone",
+        "feature_name": "Mid-Atlantic Lexical Innovation Zone",
+        "category": "lexical_diffusion",
+        "intensity_score": 0.64,
+        "dominant_variant": "Mid-Atlantic corridor usage",
+        "diffusion_status": "regional_innovation",
+        "data_status": "illustrative",
+        "description": "Illustrative Washington lexical innovation point."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.388,
+          33.749
+        ]
+      },
+      "properties": {
+        "point_id": "US-GA-ATL-LEX-2014",
+        "city": "Atlanta",
+        "state": "GA",
+        "year": 2014,
+        "feature_id": "online_lexical_innovation",
+        "feature_name": "Online Lexical Innovation",
+        "category": "lexical_diffusion",
+        "intensity_score": 0.77,
+        "dominant_variant": "Southern metro adoption and amplification",
+        "diffusion_status": "rapid_spread",
+        "data_status": "illustrative",
+        "description": "Illustrative Southern metro lexical diffusion point."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0715,
+          29.9511
+        ]
+      },
+      "properties": {
+        "point_id": "US-LA-NOLA-LEX-2014",
+        "city": "New Orleans",
+        "state": "LA",
+        "year": 2014,
+        "feature_id": "online_lexical_innovation",
+        "feature_name": "Online Lexical Innovation",
+        "category": "lexical_diffusion",
+        "intensity_score": 0.68,
+        "dominant_variant": "Gulf Coast localized vocabulary spread",
+        "diffusion_status": "regional_spread",
+        "data_status": "illustrative",
+        "description": "Illustrative Gulf Coast lexical diffusion point."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -95.3698,
+          29.7604
+        ]
+      },
+      "properties": {
+        "point_id": "US-TX-HOU-LEX-2014",
+        "city": "Houston",
+        "state": "TX",
+        "year": 2014,
+        "feature_id": "online_lexical_innovation",
+        "feature_name": "Online Lexical Innovation",
+        "category": "lexical_diffusion",
+        "intensity_score": 0.71,
+        "dominant_variant": "large metro adoption",
+        "diffusion_status": "rapid_spread",
+        "data_status": "illustrative",
+        "description": "Illustrative Texas metro lexical diffusion point."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.6298,
+          41.8781
+        ]
+      },
+      "properties": {
+        "point_id": "US-IL-CHI-LEX-2014",
+        "city": "Chicago",
+        "state": "IL",
+        "year": 2014,
+        "feature_id": "online_lexical_innovation",
+        "feature_name": "Online Lexical Innovation",
+        "category": "lexical_diffusion",
+        "intensity_score": 0.75,
+        "dominant_variant": "national metro adoption",
+        "diffusion_status": "rapid_spread",
+        "data_status": "illustrative",
+        "description": "Illustrative Chicago lexical diffusion point."
+      }
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "sources": [
+    {
+      "source_id": "sciencedaily_grieve_2018",
+      "label": "ScienceDaily article on regional language spread and Jack Grieve research",
+      "url": "https://www.sciencedaily.com/releases/2018/09/180926110901.htm",
+      "type": "article"
+    },
+    {
+      "source_id": "frontiers_ai_2019",
+      "label": "Frontiers in Artificial Intelligence article on language and geospatial/social media analysis",
+      "url": "https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2019.00011/full",
+      "type": "article"
+    },
+    {
+      "source_id": "youtube_language_video",
+      "label": "YouTube video source referenced in original notes",
+      "url": "https://www.youtube.com/watch?v=sW70Y6XDiRA",
+      "type": "video"
+    },
+    {
+      "source_id": "cambridge_regional_written_american_english",
+      "label": "Cambridge Core: Regional Variation in Written American English conclusion",
+      "url": "https://www.cambridge.org/core/books/abs/regional-variation-in-written-american-english/conclusion/E485C5CCB6CCE2BF5663C361B4098CF0",
+      "type": "book_chapter"
+    },
+    {
+      "source_id": "mapbox_hillshade_example",
+      "label": "Mapbox GL JS hillshade example",
+      "url": "https://docs.mapbox.com/mapbox-gl-js/example/hillshade/",
+      "type": "documentation"
+    },
+    {
+      "source_id": "tangram_terrain_demos",
+      "label": "Tangram terrain demos",
+      "url": "https://tangrams.github.io/terrain-demos/?url=styles/grayscale.yaml",
+      "type": "documentation"
+    },
+    {
+      "source_id": "syncpoint_terrain_rgb",
+      "label": "Syncpoint terrain-rgb GitHub repository",
+      "url": "https://github.com/syncpoint/terrain-rgb",
+      "type": "repository"
+    },
+    {
+      "source_id": "tangram_heightmapper",
+      "label": "Tangram Heightmapper",
+      "url": "https://tangrams.github.io/heightmapper/",
+      "type": "tool"
+    },
+    {
+      "source_id": "tangram_carousel_terrain",
+      "label": "Tangram carousel terrain example",
+      "url": "https://tangrams.github.io/carousel/?terrain#12/37.8456/-122.1635",
+      "type": "demo"
+    },
+    {
+      "source_id": "tangram_github",
+      "label": "Tangram GitHub repository",
+      "url": "https://github.com/tangrams/tangram",
+      "type": "repository"
+    },
+    {
+      "source_id": "tilezen_joerd_docs",
+      "label": "Tilezen Joerd documentation",
+      "url": "https://github.com/tilezen/joerd/tree/master/docs",
+      "type": "repository"
+    },
+    {
+      "source_id": "opentopography",
+      "label": "OpenTopography",
+      "url": "https://opentopography.org/",
+      "type": "data_portal"
+    },
+    {
+      "source_id": "usgs_national_map_gis_download",
+      "label": "USGS National Map GIS data download",
+      "url": "https://www.usgs.gov/the-national-map-data-delivery/gis-data-download",
+      "type": "data_portal"
+    }
+  ]
+}
