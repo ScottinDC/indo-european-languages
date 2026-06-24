@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Indo-European Language Spread</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.25.0/mapbox-gl.css" rel="stylesheet">
 <style>
 :root {
   --text-1: #1A1A1A;
@@ -56,13 +56,7 @@ body::before {
   display: none;
 }
 #overlay { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
-.leaflet-container { background: transparent !important; font: inherit; }
-/* Heavily contrast the hillshade to make mountains pop, use multiply to drop out white */
-.hillshade { mix-blend-mode: multiply; filter: contrast(4.0) brightness(0.8); }
-.land-mass { 
-  -webkit-filter: drop-shadow(0px 18px 28px rgba(40,38,60,0.3));
-  filter: drop-shadow(0px 18px 28px rgba(40,38,60,0.3));
-}
+.mapboxgl-canvas { outline: none; }
 
 .left-panel {
   position: absolute;
@@ -172,9 +166,8 @@ input[type=range]::-moz-range-thumb {
   <div class="info-card" id="info"></div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.25.0/mapbox-gl.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <script>
 const VIO = '#5B4BD6', HOME = '#3A2EA0';
 
@@ -274,50 +267,43 @@ function highlightArc(id) {
 
 renderBars('speakers');
 
-// Leaflet terrain map
-const map = L.map('map', {
-  zoomControl:false, attributionControl:false, dragging:false, scrollWheelZoom:false,
-  doubleClickZoom:false, boxZoom:false, keyboard:false, touchZoom:false, zoomSnap:0.05, zoomDelta:0.05
+const pt = (lng,lat) => { const p = map.project([lng,lat]); return [p.x, p.y]; };
+
+const map = new mapboxgl.Map({
+  accessToken: 'pk.eyJ1Ijoic2NvdHRpbnNmMjAyNiIsImEiOiJjbXFsbDc1eHcxMHlnMnFxMW9pM29kdm5zIn0.rrB6wdFP_zzUC-BPQ8paiw',
+  container: 'map',
+  style: 'mapbox://styles/mapbox/standard',
+  config: {
+    basemap: {
+      theme: 'monochrome'
+    }
+  },
+  bounds: [[-20, 7], [90, 67]],
+  fitBoundsOptions: { padding: {top: 14, bottom: 16, left: 244, right: 16} },
+  interactive: false,
+  dragPan: false,
+  dragRotate: false,
+  scrollZoom: false,
+  doubleClickZoom: false,
+  touchZoomRotate: false,
+  keyboard: false
 });
 
-// Crisp hillshade overlay for terrain mountains
-L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
-  { maxZoom: 13, opacity: 1, className: 'hillshade', crossOrigin: true }).addTo(map);
-
-function fitRegion() {
-  map.fitBounds([[7,-20],[67,90]], { paddingTopLeft:[244,14], paddingBottomRight:[16,16], animate:false });
-}
-fitRegion();
-map.invalidateSize(false);
-fitRegion();
-
-const pt = (lng,lat) => { const p = map.latLngToContainerPoint([lat,lng]); return [p.x, p.y]; };
-
-// Draw solid land with drop-shadow to create floating continent effect
-fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
-  .then(r => r.json())
-  .then(world => {
-    map.createPane('landPane');
-    map.getPane('landPane').style.zIndex = 150;
-    map.getPane('landPane').style.pointerEvents = 'none';
-    const landRenderer = L.svg({ pane: 'landPane' });
-    
-    // Use 'land' object for a single merged continent without internal borders
-    const landmass = topojson.feature(world, world.objects.land);
-    L.geoJSON(landmass, { 
-      renderer: landRenderer,
-      interactive: false, 
-      style: { 
-        fillColor: '#FFFFFF', 
-        fillOpacity: 1, 
-        color: '#FFFFFF', 
-        weight: 0, 
-        className: 'land-mass' 
-      } 
-    }).addTo(map);
-  })
-  .catch(()=>{})
-  .finally(drawOverlay);
+map.on('load', () => {
+  map.addSource('dem', {
+    'type': 'raster-dem',
+    'url': 'mapbox://mapbox.mapbox-terrain-dem-v1'
+  });
+  map.addLayer({
+    'id': 'hillshading',
+    'source': 'dem',
+    'type': 'hillshade',
+    'slot': 'bottom'
+  });
+  
+  // Draw D3 overlays over the map after the base layers load
+  drawOverlay();
+});
 
 function drawOverlay() {
   const svg = d3.select('#overlay');
@@ -416,7 +402,32 @@ function showInfo(b) {
     </p>`;
 }
 
-window.addEventListener('resize', () => { map.invalidateSize(false); fitRegion(); });
+window.addEventListener('resize', () => { 
+  map.fitBounds([[-20, 7], [90, 67]], { padding: {top: 14, bottom: 16, left: 244, right: 16}, animate: false });
+  // Mapbox doesn't automatically recalculate projections instantly if bounds change unless rendered,
+  // we could just let mapbox handle resize and re-render the overlay.
+});
+
+map.on('move', () => {
+  // Update D3 paths if map is resized/moved
+  const ag = d3.select('#ie-arcs');
+  const lg = d3.select('#ie-labels');
+  const ng = d3.select('#ie-nodes');
+  
+  // Re-project labels
+  lg.selectAll('text').data(LABELS).attr('x', d => pt(d[1], d[2])[0]).attr('y', d => pt(d[1], d[2])[1]);
+  
+  const PIE = pt(47,47);
+  ng.select('.pp').parent().attr('transform', `translate(${PIE[0]},${PIE[1]})`);
+  
+  // Re-project nodes and arcs
+  BRANCHES.forEach(b => { 
+    b.ep = pt(b.dest[0], b.dest[1]); 
+    const el = document.getElementById('arc-'+b.id);
+    if (el) el.setAttribute('d', arc(PIE,b.ep));
+    d3.select('#node-'+b.id).attr('transform', `translate(${b.ep[0]},${b.ep[1]})`);
+  });
+});
 </script>
 </body>
 </html>
