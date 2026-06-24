@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indo-European Language Spread</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+:root {
+  --text-1: #1A1A1A;
+  --text-2: #5E5C56;
+  --text-3: #9A988F;
+  --bg-1: #FFFFFF;
+  --bg-2: #EEEDE9;
+  --border: #E4E2DC;
+  --bar-track: #ECEAE4;
+  --violet: #5B4BD6;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  padding: 28px;
+  min-height: 100%;
+  background: var(--bg-2);
+  font-family: var(--font-sans);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  isolation: isolate;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url('background-pattern-02.png');
+  background-repeat: repeat;
+  background-size: 480px auto;
+  opacity: 0.85;
+  z-index: -1;
+}
+.card {
+  position: relative;
+  width: min(calc(100vw - 56px), calc((100vh - 56px) * 920 / 622));
+  aspect-ratio: 920 / 622;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #EBECEF;
+  border: 0.5px solid #DEDCD6;
+  box-shadow: 0 10px 34px -10px rgba(40,38,60,.22), 0 2px 8px rgba(40,38,60,.08);
+}
+#map { position: absolute; inset: 0; z-index: 1; }
+.map-pattern {
+  position: absolute;
+  top: 0; left: 230px; right: 0; bottom: 0;
+  background-image: url('background-pattern-02.png');
+  background-size: 480px auto;
+  background-repeat: repeat;
+  opacity: 0.09;
+  z-index: 2;
+  pointer-events: none;
+}
+#overlay { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+.leaflet-container { background: transparent !important; font: inherit; }
+/* Pronounced shaded-relief terrain */
+.relief    { filter: grayscale(1) contrast(1.55) brightness(1.05); }
+.hillshade { mix-blend-mode: multiply; filter: grayscale(1) contrast(2.4) brightness(0.92); }
+
+.left-panel {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 230px;
+  background: var(--bg-1);
+  border-right: 0.5px solid var(--border);
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  z-index: 3;
+}
+.info-card {
+  position: absolute;
+  bottom: 16px; right: 16px;
+  width: 208px;
+  background: var(--bg-1);
+  border-radius: 9px;
+  padding: 12px 14px;
+  border: 0.5px solid var(--border);
+  box-shadow: 0 8px 28px -4px rgba(40,38,60,.38), 0 2px 8px rgba(40,38,60,.12);
+  display: none;
+  z-index: 3;
+}
+.arc { fill: none; stroke-linecap: round; }
+.bn  { cursor: pointer; pointer-events: all; }
+.bn .nd { transition: r .18s ease; }
+@media (prefers-reduced-motion: no-preference) {
+  .pp { animation: ppa 3.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+}
+@keyframes ppa {
+  0%, 100% { opacity: .10; transform: scale(1); }
+  50%      { opacity: .20; transform: scale(2.2); }
+}
+input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 4px; border-radius: 2px;
+  background: #E0DFDA; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 13px; height: 13px;
+  border-radius: 50%; background: var(--violet); cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+  width: 13px; height: 13px; border: none;
+  border-radius: 50%; background: var(--violet); cursor: pointer;
+}
+.play-btn {
+  width: 30px; height: 26px; flex: none;
+  border: 0.5px solid #E0DED8; background: #F7F6F3;
+  color: #3A2EA0; border-radius: 6px; cursor: pointer;
+  font-size: 11px; display: grid; place-items: center;
+}
+.mode-btn {
+  flex: 1; padding: 4px 0; border-radius: 5px;
+  border: 0.5px solid #E0DED8; background: #F0EFE9;
+  color: var(--text-2); font-size: 9.5px; font-family: var(--font-sans);
+  cursor: pointer; transition: background .15s, color .15s;
+}
+.mode-btn.active { background: var(--violet); color: #fff; border-color: var(--violet); }
+</style>
+</head>
+<body>
+<div class="card">
+  <div id="map"></div>
+  <div class="map-pattern"></div>
+  <svg id="overlay">
+    <defs>
+      <filter id="halo" x="-25%" y="-25%" width="150%" height="150%">
+        <feDropShadow dx="0" dy="0" stdDeviation="1.6" flood-color="#ffffff" flood-opacity="0.95"/>
+      </filter>
+    </defs>
+    <g id="ie-labels"></g>
+    <g id="ie-arcs" filter="url(#halo)"></g>
+    <g id="ie-nodes"></g>
+  </svg>
+
+  <div class="left-panel">
+    <p style="margin:0;font-size:15px;font-weight:600;color:var(--text-1);letter-spacing:-.2px;line-height:1.25;">Indo-European Language Family</p>
+    <p style="margin:4px 0 0;font-size:11px;color:var(--text-3);line-height:1.4;">Branches, speakers, and spread from the PIE homeland</p>
+
+    <p style="margin:14px 0 0;font-size:12px;color:var(--text-2);">Estimated speakers today</p>
+    <p style="margin:3px 0 0;font-size:36px;font-weight:600;color:var(--text-1);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.5px;">3.4B</p>
+    <p style="margin:3px 0 0;font-size:12px;color:var(--text-3);">Across Indo-European languages</p>
+
+    <div style="border-top:0.5px solid #E8E6E0;margin-top:14px;padding-top:12px;flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="display:flex;gap:4px;margin-bottom:9px;">
+        <button class="mode-btn active" data-mode="speakers" onclick="renderBars('speakers')">Speakers</button>
+        <button class="mode-btn" data-mode="development" onclick="renderBars('development')">Dev. time</button>
+        <button class="mode-btn" data-mode="spread" onclick="renderBars('spread')">Spread</button>
+      </div>
+      <div id="bars" style="flex:1;min-height:0;overflow:hidden;"></div>
+    </div>
+
+    <div style="border-top:0.5px solid #E8E6E0;padding-top:13px;margin-top:13px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
+        <span style="font-size:12px;color:var(--text-2);">Year</span>
+        <span id="yr-label" style="font-size:15px;font-weight:600;color:var(--text-1);font-variant-numeric:tabular-nums;">3500 BCE</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;">
+        <input type="range" id="slider" min="-3500" max="2000" value="-3500" oninput="setYear(+this.value)">
+        <button class="play-btn" id="play-btn" onclick="togglePlay()">&#9658;</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-card" id="info"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+const VIO = '#5B4BD6', HOME = '#3A2EA0';
+
+const BRANCHES = [
+  {id:'anatolian',  name:'Anatolian',      ex:true,  col:'#9A8B4F', dy:-3000,ay:-2500,lx:12, ly:4,  la:'start',  spk:0,    dev_yrs:750,  spread_rate:1.5, dist_km:1100, dest:[34,38.5],
+   desc:'First branch to separate (~3000 BCE). Hittite is the oldest attested Indo-European language. Extinct c. 400 CE.',
+   langs:'Hittite, Luwian, Lydian, Lycian'},
+  {id:'tocharian',  name:'Tocharian',      ex:true,  col:'#8A7FA8', dy:-2500,ay:-1800,lx:-12,ly:4,  la:'end',    spk:0,    dev_yrs:1250, spread_rate:2.4, dist_km:3000, dest:[84,41],
+   desc:'Easternmost branch, yet showing several "western" features. Manuscripts were found in the Tarim Basin, Xinjiang. Extinct c. 9th century CE.',
+   langs:'Tocharian A (Agnean), Tocharian B (Kuchean)'},
+  {id:'indo-iranian',name:'Indo-Iranian',  ex:false, col:'#C2683B', dy:-2200,ay:-1500,lx:12, ly:4,  la:'start',  spk:1400, dev_yrs:2500, spread_rate:1.1, dist_km:2700, dest:[68,30],
+   desc:'Largest branch. Divides into Indo-Aryan (~900M) and Iranian (~300M) sub-branches. Sanskrit is its oldest attested form.',
+   langs:'Hindi, Urdu, Bengali, Persian, Pashto, Kurdish, Nepali'},
+  {id:'balto-slavic',name:'Balto-Slavic',  ex:false, col:'#5B4BD6', dy:-1500,ay:-900, lx:0,  ly:-13,la:'middle', spk:320,  dev_yrs:3500, spread_rate:0.5, dist_km:1600, dest:[28,52],
+   desc:'Split into Baltic and Slavic sub-branches around 500 BCE. Slavic alone accounts for roughly 300M speakers.',
+   langs:'Russian, Polish, Ukrainian, Czech, Serbian, Lithuanian, Latvian'},
+  {id:'armenian',   name:'Armenian',       ex:false, col:'#A8447A', dy:-1500,ay:-1000,lx:12, ly:4,  la:'start',  spk:7,    dev_yrs:2750, spread_rate:0.3, dist_km:900,  dest:[44,40.5],
+   desc:'An independent, isolated branch. A distinct Armenian script was devised in 405 CE by Mesrop Mashtots.',
+   langs:'Classical, Eastern and Western Armenian'},
+  {id:'hellenic',   name:'Hellenic',       ex:false, col:'#2F6FB0', dy:-1800,ay:-1400,lx:-12,ly:4,  la:'end',    spk:13,   dev_yrs:2600, spread_rate:0.7, dist_km:1900, dest:[22,38],
+   desc:'Ancient Greek shaped Western philosophy and science. The New Testament was composed in Koine Greek.',
+   langs:'Mycenaean \u2020, Ancient, Koine and Modern Greek'},
+  {id:'italic',     name:'Italic-Romance', ex:false, col:'#B23A48', dy:-1400,ay:-900, lx:-12,ly:4,  la:'end',    spk:900,  dev_yrs:3000, spread_rate:0.8, dist_km:2500, dest:[12,43],
+   desc:"Latin's descendants. Roman expansion and later European colonialism carried Romance languages worldwide.",
+   langs:'Spanish, French, Portuguese, Italian, Romanian'},
+  {id:'celtic',     name:'Celtic',         ex:false, col:'#4F8A3D', dy:-1300,ay:-700, lx:12, ly:4,  la:'start',  spk:2,    dev_yrs:3450, spread_rate:1.0, dist_km:3400, dest:[-4,52],
+   desc:'Once dominant across Europe \u2014 Gaul, Iberia, Anatolia. Now largely confined to the Atlantic fringe.',
+   langs:'Welsh, Irish, Scottish Gaelic, Breton, Cornish'},
+  {id:'germanic',   name:'Germanic',       ex:false, col:'#2E7D6B', dy:-1200,ay:-700, lx:0,  ly:-13,la:'middle', spk:520,  dev_yrs:3750, spread_rate:0.7, dist_km:2500, dest:[12,56],
+   desc:'English has become the most widely spoken non-native language in history, with ~1.5 billion users.',
+   langs:'English, German, Dutch, Swedish, Norwegian, Danish'},
+  {id:'albanian',   name:'Albanian',       ex:false, col:'#3E8E9E', dy:-1000,ay:-500, lx:-12,ly:14, la:'end',    spk:8,    dev_yrs:3250, spread_rate:0.6, dist_km:2100, dest:[20,41.5],
+   desc:'An independent branch with two major dialect groups: Gheg (north) and Tosk (south).',
+   langs:'Gheg Albanian, Tosk Albanian'},
+];
+
+const LABELS = [
+  ['Iceland',-19,65],['United Kingdom',-3,53.2],['France',2,47],['Spain',-4,40],['Germany',10,51],
+  ['Italy',13,42.6],['Poland',19.5,52],['Greece',22,39.4],['T\u00fcrkiye',35,39],['Egypt',30,26.5],
+  ['Libya',18,27],['Algeria',3,28],['Morocco',-7,32],['Saudi Arabia',45,23.5],['Iran',54,32],
+  ['Iraq',43.5,33],['Kazakhstan',67,48],['Russia',56,58],['India',79,22],['Pakistan',69,29.5],
+  ['Ukraine',32,49],['Sweden',15,62.5],['Norway',9,62],['Finland',26,64],['Sudan',30,15],
+  ['Afghanistan',66,34],['Uzbekistan',63.5,42],['Syria',38,35],['China',88,37],['Romania',25,46],
+];
+
+let curY = -3500, playing = false, timer = null;
+
+function arc([x1,y1],[x2,y2]) {
+  const mx=(x1+x2)/2, my=(y1+y2)/2, d=Math.hypot(x2-x1, y2-y1);
+  return `M${x1},${y1} Q${mx},${my-d*0.28} ${x2},${y2}`;
+}
+
+function renderBars(mode) {
+  const el = document.getElementById('bars');
+  el.innerHTML = '';
+  let data, maxVal, valFn, labelFn;
+  if (mode === 'speakers') {
+    data = [...BRANCHES].filter(b=>!b.ex && b.spk>0).sort((a,b)=>b.spk-a.spk);
+    maxVal = 1400;
+    valFn = b => b.spk;
+    labelFn = b => b.spk>=1000 ? `${(b.spk/1000).toFixed(1)}B` : `${b.spk}M`;
+  } else if (mode === 'development') {
+    data = [...BRANCHES].sort((a,b)=>b.dev_yrs-a.dev_yrs);
+    maxVal = 4000;
+    valFn = b => b.dev_yrs;
+    labelFn = b => `${b.dev_yrs.toLocaleString()}y`;
+  } else {
+    data = [...BRANCHES].sort((a,b)=>b.spread_rate-a.spread_rate);
+    maxVal = 2.4;
+    valFn = b => b.spread_rate;
+    labelFn = b => `${b.spread_rate}km/y`;
+  }
+  data.forEach(b => {
+    const pct = Math.max(valFn(b)/maxVal*100, 2);
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:6px;cursor:pointer;';
+    row.innerHTML =
+      `<span style="font-size:${b.name.length>11?9:10}px;width:78px;flex:none;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.name}</span>`+
+      `<div style="flex:1;background:var(--bar-track);border-radius:3px;height:5px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:${b.col};border-radius:3px;"></div></div>`+
+      `<span style="font-size:9.5px;min-width:38px;text-align:right;color:var(--text-3);font-variant-numeric:tabular-nums;">${labelFn(b)}</span>`;
+    row.addEventListener('click', ()=>{ showInfo(b); highlightArc(b.id); });
+    el.appendChild(row);
+  });
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
+  });
+}
+
+function highlightArc(id) {
+  BRANCHES.forEach(b => {
+    const el = document.getElementById('arc-'+b.id);
+    if (!el) return;
+    el.setAttribute('stroke-width', b.id===id ? (b.ex?3:4.5) : (b.ex?1.5:2.2));
+    el.setAttribute('stroke-opacity', b.id===id ? '1' : (b.ex?'.5':'.65'));
+  });
+}
+
+renderBars('speakers');
+
+// Leaflet terrain map
+const map = L.map('map', {
+  zoomControl:false, attributionControl:false, dragging:false, scrollWheelZoom:false,
+  doubleClickZoom:false, boxZoom:false, keyboard:false, touchZoom:false, zoomSnap:0.05, zoomDelta:0.05
+});
+
+// Shaded-relief base + crisp hillshade overlay (free, no token)
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}',
+  { maxZoom: 13, opacity: 1, className: 'relief', crossOrigin: true }).addTo(map);
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
+  { maxZoom: 13, opacity: 0.9, className: 'hillshade', crossOrigin: true }).addTo(map);
+
+function fitRegion() {
+  map.fitBounds([[7,-20],[67,90]], { paddingTopLeft:[244,14], paddingBottomRight:[16,16], animate:false });
+}
+fitRegion();
+map.invalidateSize(false);
+fitRegion();
+
+const pt = (lng,lat) => { const p = map.latLngToContainerPoint([lat,lng]); return [p.x, p.y]; };
+
+// Faint political borders for context, then draw the overlay
+fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+  .then(r => r.json())
+  .then(world => {
+    const land = topojson.feature(world, world.objects.countries);
+    L.geoJSON(land, { interactive:false, style:{ color:'#8C8A83', weight:0.5, opacity:0.35, fill:false } }).addTo(map);
+  })
+  .catch(()=>{})
+  .finally(drawOverlay);
+
+function drawOverlay() {
+  const svg = d3.select('#overlay');
+
+  // Country labels
+  const lg = svg.select('#ie-labels');
+  LABELS.forEach(([nm,lo,la])=>{
+    const p = pt(lo,la);
+    lg.append('text').attr('x',p[0]).attr('y',p[1]).attr('text-anchor','middle')
+      .attr('font-size',9.5).attr('fill','#6F6D67').attr('fill-opacity',.85).attr('letter-spacing','.2px')
+      .attr('stroke','rgba(255,255,255,.85)').attr('stroke-width',2.4).attr('paint-order','stroke fill').text(nm);
+  });
+
+  const ag = svg.select('#ie-arcs');
+  const ng = svg.select('#ie-nodes');
+  const PIE = pt(47,47);
+  BRANCHES.forEach(b => { b.ep = pt(b.dest[0], b.dest[1]); });
+
+  // PIE homeland
+  const pg = ng.append('g').attr('transform',`translate(${PIE[0]},${PIE[1]})`);
+  pg.append('circle').attr('class','pp').attr('r',24).attr('fill',HOME).attr('fill-opacity',.14);
+  pg.append('circle').attr('r',8).attr('fill',HOME).attr('stroke','#fff').attr('stroke-width',2.2);
+  pg.append('text').attr('y',-15).attr('text-anchor','middle').attr('font-size',12).attr('font-weight',600)
+    .attr('fill','#2A1E70').attr('stroke','rgba(255,255,255,.92)').attr('stroke-width',3).attr('paint-order','stroke fill')
+    .text('Proto-Indo-European homeland');
+
+  // Arcs
+  BRANCHES.forEach(b => {
+    const el = ag.append('path').attr('id','arc-'+b.id).attr('class','arc')
+      .attr('d', arc(PIE,b.ep)).attr('stroke',b.col)
+      .attr('stroke-width', b.ex?1.5:2.2).attr('stroke-opacity', b.ex?.5:.9);
+    if (b.ex) el.attr('stroke-dasharray','1,5');
+    b.len = el.node().getTotalLength();
+    if (!b.ex) el.attr('stroke-dasharray', b.len).attr('stroke-dashoffset', b.len);
+  });
+
+  // Nodes + labels
+  BRANCHES.forEach(b => {
+    const g = ng.append('g').attr('id','node-'+b.id).attr('class','bn')
+      .attr('transform',`translate(${b.ep[0]},${b.ep[1]})`).attr('opacity',0)
+      .on('click', ()=>{ showInfo(b); highlightArc(b.id); })
+      .on('mouseenter', function(){ d3.select(this).select('.nd').attr('r',6.5); })
+      .on('mouseleave', function(){ d3.select(this).select('.nd').attr('r',5); });
+    g.append('circle').attr('class','nd').attr('r',5).attr('fill',b.col).attr('fill-opacity',b.ex?.6:1)
+      .attr('stroke','#fff').attr('stroke-width',2);
+    g.append('text').attr('x',b.lx).attr('y',b.ly).attr('text-anchor',b.la).attr('dominant-baseline','middle')
+      .attr('font-size',11.5).attr('font-weight',500).attr('fill', b.ex?'#7C766B':'#1E1E1E')
+      .attr('stroke','rgba(255,255,255,.92)').attr('stroke-width',2.8).attr('paint-order','stroke fill')
+      .text(b.name + (b.ex?' \u2020':''));
+  });
+
+  setYear(-3500);
+}
+
+function setYear(yr) {
+  yr = +yr; curY = yr;
+  document.getElementById('slider').value = yr;
+  document.getElementById('yr-label').textContent =
+    yr < 0 ? `${Math.abs(yr)} BCE` : (yr === 0 ? '1 CE' : `${yr} CE`);
+  BRANCHES.forEach(b => {
+    if (!b.len) return;
+    const pe = document.getElementById('arc-'+b.id);
+    const ne = d3.select('#node-'+b.id);
+    const sp = b.ay - b.dy;
+    if (yr < b.dy) { if(!b.ex && pe) pe.setAttribute('stroke-dashoffset', b.len); ne.attr('opacity',0); }
+    else if (yr >= b.ay) { if(!b.ex && pe) pe.setAttribute('stroke-dashoffset', 0); ne.attr('opacity',1); }
+    else { const t=(yr-b.dy)/sp; if(!b.ex && pe) pe.setAttribute('stroke-dashoffset', b.len*(1-t)); ne.attr('opacity', t>.8?(t-.8)/.2:0); }
+  });
+}
+
+function togglePlay() {
+  const btn = document.getElementById('play-btn');
+  if (playing) { clearInterval(timer); playing=false; btn.innerHTML='&#9658;'; return; }
+  if (curY >= 2000) setYear(-3500);
+  playing = true; btn.innerHTML='&#10073;&#10073;';
+  timer = setInterval(()=>{
+    if (curY >= 2000) { clearInterval(timer); playing=false; btn.innerHTML='&#9658;'; return; }
+    setYear(curY + 25);
+  }, 46);
+}
+
+function showInfo(b) {
+  const yr = b.dy<0 ? `c. ${Math.abs(b.dy)} BCE` : `${b.dy} CE`;
+  const ext = b.ex ? ` <span style="font-size:9.5px;color:var(--text-3);">\u00b7 extinct</span>` : '';
+  const c = document.getElementById('info');
+  c.style.display = 'block';
+  c.innerHTML = `
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">
+      <span style="width:9px;height:9px;border-radius:2px;background:${b.col};flex:none;display:inline-block;"></span>
+      <strong style="font-size:12px;color:var(--text-1);font-weight:600;">${b.name}</strong>${ext}
+    </div>
+    <p style="margin:0 0 5px;font-size:10px;color:var(--text-3);">Diverged ${yr}</p>
+    <p style="margin:0 0 7px;font-size:11px;line-height:1.5;color:var(--text-2);">${b.desc}</p>
+    <p style="margin:0;padding-top:6px;border-top:0.5px solid #E8E6E0;font-size:10px;color:var(--text-3);line-height:1.45;">
+      <strong style="color:var(--text-2);font-weight:600;">Languages:</strong> ${b.langs}
+    </p>`;
+}
+
+window.addEventListener('resize', () => { map.invalidateSize(false); fitRegion(); });
+</script>
+</body>
+</html>
