@@ -288,7 +288,7 @@ const map = L.map('map', {
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}',
   { maxZoom: 13, opacity: 1, className: 'relief', crossOrigin: true }).addTo(map);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
-  { maxZoom: 13, opacity: 0.9, className: 'hillshade', crossOrigin: true }).addTo(map);
+  { maxZoom: 13, opacity: 1, className: 'hillshade', crossOrigin: true }).addTo(map);
 
 function fitRegion() {
   map.fitBounds([[7,-20],[67,90]], { paddingTopLeft:[244,14], paddingBottomRight:[16,16], animate:false });
