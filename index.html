@@ -272,6 +272,7 @@ const pt = (lng,lat) => { const p = map.project([lng,lat]); return [p.x, p.y]; }
 const map = new mapboxgl.Map({
   accessToken: 'pk.eyJ1Ijoic2NvdHRpbnNmMjAyNiIsImEiOiJjbXFsbDc1eHcxMHlnMnFxMW9pM29kdm5zIn0.rrB6wdFP_zzUC-BPQ8paiw',
   container: 'map',
+  projection: 'mercator',
   style: 'mapbox://styles/mapbox/standard',
   config: {
     basemap: {
