@@ -58,15 +58,15 @@ body::before {
   background-image: url('background-pattern-02.png');
   background-size: 480px auto;
   background-repeat: repeat;
-  opacity: 0.22;
+  opacity: 0.09;
   z-index: 2;
   pointer-events: none;
 }
 #overlay { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 .leaflet-container { background: transparent !important; font: inherit; }
 /* Pronounced shaded-relief terrain */
-.relief    { filter: grayscale(1) contrast(1.32) brightness(1.08); }
-.hillshade { mix-blend-mode: multiply; filter: grayscale(1) contrast(1.5) brightness(1.04); }
+.relief    { filter: grayscale(1) contrast(1.55) brightness(1.05); }
+.hillshade { mix-blend-mode: multiply; filter: grayscale(1) contrast(2.4) brightness(0.92); }
 
 .left-panel {
   position: absolute;
@@ -87,7 +87,7 @@ body::before {
   border-radius: 9px;
   padding: 12px 14px;
   border: 0.5px solid var(--border);
-  box-shadow: 0 6px 20px -6px rgba(40,38,60,.20);
+  box-shadow: 0 8px 28px -4px rgba(40,38,60,.38), 0 2px 8px rgba(40,38,60,.12);
   display: none;
   z-index: 3;
 }
@@ -120,6 +120,13 @@ input[type=range]::-moz-range-thumb {
   color: #3A2EA0; border-radius: 6px; cursor: pointer;
   font-size: 11px; display: grid; place-items: center;
 }
+.mode-btn {
+  flex: 1; padding: 4px 0; border-radius: 5px;
+  border: 0.5px solid #E0DED8; background: #F0EFE9;
+  color: var(--text-2); font-size: 9.5px; font-family: var(--font-sans);
+  cursor: pointer; transition: background .15s, color .15s;
+}
+.mode-btn.active { background: var(--violet); color: #fff; border-color: var(--violet); }
 </style>
 </head>
 <body>
@@ -138,16 +145,20 @@ input[type=range]::-moz-range-thumb {
   </svg>
 
   <div class="left-panel">
-    <p style="margin:0;font-size:18px;font-weight:600;color:var(--text-1);letter-spacing:-.2px;">Language statistics</p>
-    <p style="margin:2px 0 0;font-size:13px;color:var(--text-3);">Indo-European family</p>
+    <p style="margin:0;font-size:15px;font-weight:600;color:var(--text-1);letter-spacing:-.2px;line-height:1.25;">Indo-European Language Family</p>
+    <p style="margin:4px 0 0;font-size:11px;color:var(--text-3);line-height:1.4;">Branches, speakers, and spread from the PIE homeland</p>
 
-    <p style="margin:22px 0 0;font-size:12px;color:var(--text-2);">Total active speakers</p>
-    <p style="margin:3px 0 0;font-size:36px;font-weight:600;color:var(--text-1);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.5px;">~3.4B</p>
-    <p style="margin:3px 0 0;font-size:12px;color:var(--text-3);">estimated native speakers</p>
+    <p style="margin:14px 0 0;font-size:12px;color:var(--text-2);">Estimated speakers today</p>
+    <p style="margin:3px 0 0;font-size:36px;font-weight:600;color:var(--text-1);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.5px;">3.4B</p>
+    <p style="margin:3px 0 0;font-size:12px;color:var(--text-3);">Across Indo-European languages</p>
 
-    <div style="border-top:0.5px solid #E8E6E0;margin-top:18px;padding-top:14px;flex:1;min-height:0;overflow:hidden;">
-      <p style="margin:0 0 11px;font-size:12px;font-weight:600;color:var(--text-2);">Speakers by branch</p>
-      <div id="bars"></div>
+    <div style="border-top:0.5px solid #E8E6E0;margin-top:14px;padding-top:12px;flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="display:flex;gap:4px;margin-bottom:9px;">
+        <button class="mode-btn active" data-mode="speakers" onclick="renderBars('speakers')">Speakers</button>
+        <button class="mode-btn" data-mode="development" onclick="renderBars('development')">Dev. time</button>
+        <button class="mode-btn" data-mode="spread" onclick="renderBars('spread')">Spread</button>
+      </div>
+      <div id="bars" style="flex:1;min-height:0;overflow:hidden;"></div>
     </div>
 
     <div style="border-top:0.5px solid #E8E6E0;padding-top:13px;margin-top:13px;">
@@ -172,34 +183,34 @@ input[type=range]::-moz-range-thumb {
 const VIO = '#5B4BD6', HOME = '#3A2EA0';
 
 const BRANCHES = [
-  {id:'anatolian',  name:'Anatolian',      ex:true,  col:'#9A8B4F', dy:-3000,ay:-2500,lx:12, ly:4,  la:'start',  spk:0,    dest:[34,38.5],
+  {id:'anatolian',  name:'Anatolian',      ex:true,  col:'#9A8B4F', dy:-3000,ay:-2500,lx:12, ly:4,  la:'start',  spk:0,    dev_yrs:750,  spread_rate:1.5, dist_km:1100, dest:[34,38.5],
    desc:'First branch to separate (~3000 BCE). Hittite is the oldest attested Indo-European language. Extinct c. 400 CE.',
    langs:'Hittite, Luwian, Lydian, Lycian'},
-  {id:'tocharian',  name:'Tocharian',      ex:true,  col:'#8A7FA8', dy:-2500,ay:-1800,lx:-12,ly:4,  la:'end',    spk:0,    dest:[84,41],
+  {id:'tocharian',  name:'Tocharian',      ex:true,  col:'#8A7FA8', dy:-2500,ay:-1800,lx:-12,ly:4,  la:'end',    spk:0,    dev_yrs:1250, spread_rate:2.4, dist_km:3000, dest:[84,41],
    desc:'Easternmost branch, yet showing several "western" features. Manuscripts were found in the Tarim Basin, Xinjiang. Extinct c. 9th century CE.',
    langs:'Tocharian A (Agnean), Tocharian B (Kuchean)'},
-  {id:'indo-iranian',name:'Indo-Iranian',  ex:false, col:'#C2683B', dy:-2200,ay:-1500,lx:12, ly:4,  la:'start',  spk:1400, dest:[68,30],
+  {id:'indo-iranian',name:'Indo-Iranian',  ex:false, col:'#C2683B', dy:-2200,ay:-1500,lx:12, ly:4,  la:'start',  spk:1400, dev_yrs:2500, spread_rate:1.1, dist_km:2700, dest:[68,30],
    desc:'Largest branch. Divides into Indo-Aryan (~900M) and Iranian (~300M) sub-branches. Sanskrit is its oldest attested form.',
    langs:'Hindi, Urdu, Bengali, Persian, Pashto, Kurdish, Nepali'},
-  {id:'balto-slavic',name:'Balto-Slavic',  ex:false, col:'#5B4BD6', dy:-1500,ay:-900, lx:0,  ly:-13,la:'middle', spk:320,  dest:[28,52],
+  {id:'balto-slavic',name:'Balto-Slavic',  ex:false, col:'#5B4BD6', dy:-1500,ay:-900, lx:0,  ly:-13,la:'middle', spk:320,  dev_yrs:3500, spread_rate:0.5, dist_km:1600, dest:[28,52],
    desc:'Split into Baltic and Slavic sub-branches around 500 BCE. Slavic alone accounts for roughly 300M speakers.',
    langs:'Russian, Polish, Ukrainian, Czech, Serbian, Lithuanian, Latvian'},
-  {id:'armenian',   name:'Armenian',       ex:false, col:'#A8447A', dy:-1500,ay:-1000,lx:12, ly:4,  la:'start',  spk:7,    dest:[44,40.5],
+  {id:'armenian',   name:'Armenian',       ex:false, col:'#A8447A', dy:-1500,ay:-1000,lx:12, ly:4,  la:'start',  spk:7,    dev_yrs:2750, spread_rate:0.3, dist_km:900,  dest:[44,40.5],
    desc:'An independent, isolated branch. A distinct Armenian script was devised in 405 CE by Mesrop Mashtots.',
    langs:'Classical, Eastern and Western Armenian'},
-  {id:'hellenic',   name:'Hellenic',       ex:false, col:'#2F6FB0', dy:-1800,ay:-1400,lx:-12,ly:4,  la:'end',    spk:13,   dest:[22,38],
+  {id:'hellenic',   name:'Hellenic',       ex:false, col:'#2F6FB0', dy:-1800,ay:-1400,lx:-12,ly:4,  la:'end',    spk:13,   dev_yrs:2600, spread_rate:0.7, dist_km:1900, dest:[22,38],
    desc:'Ancient Greek shaped Western philosophy and science. The New Testament was composed in Koine Greek.',
    langs:'Mycenaean \u2020, Ancient, Koine and Modern Greek'},
-  {id:'italic',     name:'Italic-Romance', ex:false, col:'#B23A48', dy:-1400,ay:-900, lx:-12,ly:4,  la:'end',    spk:900,  dest:[12,43],
+  {id:'italic',     name:'Italic-Romance', ex:false, col:'#B23A48', dy:-1400,ay:-900, lx:-12,ly:4,  la:'end',    spk:900,  dev_yrs:3000, spread_rate:0.8, dist_km:2500, dest:[12,43],
    desc:"Latin's descendants. Roman expansion and later European colonialism carried Romance languages worldwide.",
    langs:'Spanish, French, Portuguese, Italian, Romanian'},
-  {id:'celtic',     name:'Celtic',         ex:false, col:'#4F8A3D', dy:-1300,ay:-700, lx:12, ly:4,  la:'start',  spk:2,    dest:[-4,52],
+  {id:'celtic',     name:'Celtic',         ex:false, col:'#4F8A3D', dy:-1300,ay:-700, lx:12, ly:4,  la:'start',  spk:2,    dev_yrs:3450, spread_rate:1.0, dist_km:3400, dest:[-4,52],
    desc:'Once dominant across Europe \u2014 Gaul, Iberia, Anatolia. Now largely confined to the Atlantic fringe.',
    langs:'Welsh, Irish, Scottish Gaelic, Breton, Cornish'},
-  {id:'germanic',   name:'Germanic',       ex:false, col:'#2E7D6B', dy:-1200,ay:-700, lx:0,  ly:-13,la:'middle', spk:520,  dest:[12,56],
+  {id:'germanic',   name:'Germanic',       ex:false, col:'#2E7D6B', dy:-1200,ay:-700, lx:0,  ly:-13,la:'middle', spk:520,  dev_yrs:3750, spread_rate:0.7, dist_km:2500, dest:[12,56],
    desc:'English has become the most widely spoken non-native language in history, with ~1.5 billion users.',
    langs:'English, German, Dutch, Swedish, Norwegian, Danish'},
-  {id:'albanian',   name:'Albanian',       ex:false, col:'#3E8E9E', dy:-1000,ay:-500, lx:-12,ly:14, la:'end',    spk:8,    dest:[20,41.5],
+  {id:'albanian',   name:'Albanian',       ex:false, col:'#3E8E9E', dy:-1000,ay:-500, lx:-12,ly:14, la:'end',    spk:8,    dev_yrs:3250, spread_rate:0.6, dist_km:2100, dest:[20,41.5],
    desc:'An independent branch with two major dialect groups: Gheg (north) and Tosk (south).',
    langs:'Gheg Albanian, Tosk Albanian'},
 ];
@@ -220,20 +231,52 @@ function arc([x1,y1],[x2,y2]) {
   return `M${x1},${y1} Q${mx},${my-d*0.28} ${x2},${y2}`;
 }
 
-// Sidebar speaker bars
-const barsEl = document.getElementById('bars');
-[...BRANCHES].filter(b=>!b.ex).sort((a,b)=>b.spk-a.spk).forEach(b=>{
-  const pct = Math.max(b.spk/1400*100, 2);
-  const lbl = b.spk>=1000 ? `${(b.spk/1000).toFixed(1)}B` : `${b.spk}M`;
-  const row = document.createElement('div');
-  row.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:7px;cursor:pointer;';
-  row.innerHTML =
-    `<span style="font-size:${b.name.length>11?10:11}px;width:78px;flex:none;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.name}</span>`+
-    `<div style="flex:1;background:var(--bar-track);border-radius:3px;height:5px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:${b.col};border-radius:3px;"></div></div>`+
-    `<span style="font-size:11px;min-width:30px;text-align:right;color:var(--text-3);font-variant-numeric:tabular-nums;">${lbl}</span>`;
-  row.addEventListener('click', ()=>showInfo(b));
-  barsEl.appendChild(row);
-});
+function renderBars(mode) {
+  const el = document.getElementById('bars');
+  el.innerHTML = '';
+  let data, maxVal, valFn, labelFn;
+  if (mode === 'speakers') {
+    data = [...BRANCHES].filter(b=>!b.ex && b.spk>0).sort((a,b)=>b.spk-a.spk);
+    maxVal = 1400;
+    valFn = b => b.spk;
+    labelFn = b => b.spk>=1000 ? `${(b.spk/1000).toFixed(1)}B` : `${b.spk}M`;
+  } else if (mode === 'development') {
+    data = [...BRANCHES].sort((a,b)=>b.dev_yrs-a.dev_yrs);
+    maxVal = 4000;
+    valFn = b => b.dev_yrs;
+    labelFn = b => `${b.dev_yrs.toLocaleString()}y`;
+  } else {
+    data = [...BRANCHES].sort((a,b)=>b.spread_rate-a.spread_rate);
+    maxVal = 2.4;
+    valFn = b => b.spread_rate;
+    labelFn = b => `${b.spread_rate}km/y`;
+  }
+  data.forEach(b => {
+    const pct = Math.max(valFn(b)/maxVal*100, 2);
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:6px;cursor:pointer;';
+    row.innerHTML =
+      `<span style="font-size:${b.name.length>11?9:10}px;width:78px;flex:none;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.name}</span>`+
+      `<div style="flex:1;background:var(--bar-track);border-radius:3px;height:5px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:${b.col};border-radius:3px;"></div></div>`+
+      `<span style="font-size:9.5px;min-width:38px;text-align:right;color:var(--text-3);font-variant-numeric:tabular-nums;">${labelFn(b)}</span>`;
+    row.addEventListener('click', ()=>{ showInfo(b); highlightArc(b.id); });
+    el.appendChild(row);
+  });
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
+  });
+}
+
+function highlightArc(id) {
+  BRANCHES.forEach(b => {
+    const el = document.getElementById('arc-'+b.id);
+    if (!el) return;
+    el.setAttribute('stroke-width', b.id===id ? (b.ex?3:4.5) : (b.ex?1.5:2.2));
+    el.setAttribute('stroke-opacity', b.id===id ? '1' : (b.ex?'.5':'.65'));
+  });
+}
+
+renderBars('speakers');
 
 // Leaflet terrain map
 const map = L.map('map', {
@@ -305,7 +348,7 @@ function drawOverlay() {
   BRANCHES.forEach(b => {
     const g = ng.append('g').attr('id','node-'+b.id).attr('class','bn')
       .attr('transform',`translate(${b.ep[0]},${b.ep[1]})`).attr('opacity',0)
-      .on('click', ()=>showInfo(b))
+      .on('click', ()=>{ showInfo(b); highlightArc(b.id); })
       .on('mouseenter', function(){ d3.select(this).select('.nd').attr('r',6.5); })
       .on('mouseleave', function(){ d3.select(this).select('.nd').attr('r',5); });
     g.append('circle').attr('class','nd').attr('r',5).attr('fill',b.col).attr('fill-opacity',b.ex?.6:1)
