@@ -57,10 +57,12 @@ body::before {
 }
 #overlay { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 .leaflet-container { background: transparent !important; font: inherit; }
-/* Pronounced shaded-relief terrain */
-.relief    { mix-blend-mode: multiply; filter: grayscale(1) contrast(1.6) brightness(1.3); }
-.hillshade { mix-blend-mode: multiply; filter: grayscale(1) contrast(2.0) brightness(1.1); }
-.land-mass { filter: drop-shadow(0px 15px 25px rgba(40,38,60,0.18)); }
+/* Heavily contrast the hillshade to make mountains pop, use multiply to drop out white */
+.hillshade { mix-blend-mode: multiply; filter: contrast(4.0) brightness(0.8); }
+.land-mass { 
+  -webkit-filter: drop-shadow(0px 18px 28px rgba(40,38,60,0.3));
+  filter: drop-shadow(0px 18px 28px rgba(40,38,60,0.3));
+}
 
 .left-panel {
   position: absolute;
@@ -278,9 +280,7 @@ const map = L.map('map', {
   doubleClickZoom:false, boxZoom:false, keyboard:false, touchZoom:false, zoomSnap:0.05, zoomDelta:0.05
 });
 
-// Shaded-relief base + crisp hillshade overlay
-L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}',
-  { maxZoom: 13, opacity: 1, className: 'relief', crossOrigin: true }).addTo(map);
+// Crisp hillshade overlay for terrain mountains
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
   { maxZoom: 13, opacity: 1, className: 'hillshade', crossOrigin: true }).addTo(map);
 
