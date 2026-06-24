@@ -4,164 +4,137 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Indo-European Language Spread</title>
-<link href='https://api.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.css' rel='stylesheet'>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 :root {
-  --color-text-primary: #1A1A1A;
-  --color-text-secondary: #606060;
-  --color-text-tertiary: #9A9A9A;
-  --color-background-primary: #FFFFFF;
-  --color-background-secondary: #F0F0EE;
-  --color-border-tertiary: #E0DDD8;
-  --border-radius-lg: 12px;
-  --border-radius-md: 8px;
+  --text-1: #1A1A1A;
+  --text-2: #5E5C56;
+  --text-3: #9A988F;
+  --bg-1: #FFFFFF;
+  --bg-2: #EEEDE9;
+  --border: #E4E2DC;
+  --bar-track: #ECEAE4;
+  --violet: #5B4BD6;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-text-primary: #F0EFEC;
-    --color-text-secondary: #A8A8A0;
-    --color-text-tertiary: #686860;
-    --color-background-primary: #1C1C1C;
-    --color-background-secondary: #2A2A28;
-    --color-border-tertiary: #383830;
-  }
-}
-
 *, *::before, *::after { box-sizing: border-box; }
-html { height: 100%; }
-
+html, body { height: 100%; }
 body {
   margin: 0;
-  padding: 24px;
+  padding: 28px;
   min-height: 100%;
-  background: var(--color-background-secondary);
+  background: var(--bg-2);
   font-family: var(--font-sans);
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 .card {
   position: relative;
-  border-radius: var(--border-radius-lg);
+  width: min(calc(100vw - 56px), calc((100vh - 56px) * 920 / 622));
+  aspect-ratio: 920 / 622;
+  border-radius: 14px;
   overflow: hidden;
-  border: 0.5px solid var(--color-border-tertiary);
-  width: min(calc(100vw - 48px), calc((100vh - 48px) * 680 / 460));
-  aspect-ratio: 680 / 460;
-  box-shadow: 0 4px 24px rgba(0,0,0,.10);
+  background: #EBECEF;
+  border: 0.5px solid #DEDCD6;
+  box-shadow: 0 10px 34px -10px rgba(40,38,60,.22), 0 2px 8px rgba(40,38,60,.08);
 }
-
-#map {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-}
-
-#overlay {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-}
+#map { position: absolute; inset: 0; z-index: 1; }
+#overlay { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+.leaflet-container { background: transparent !important; font: inherit; }
+/* Pronounced shaded-relief terrain */
+.relief    { filter: grayscale(1) contrast(1.32) brightness(1.08); }
+.hillshade { mix-blend-mode: multiply; filter: grayscale(1) contrast(1.5) brightness(1.04); }
 
 .left-panel {
   position: absolute;
   top: 0; left: 0; bottom: 0;
-  width: min(218px, 32.06%);
-  background: var(--color-background-primary);
-  border-right: 0.5px solid var(--color-border-tertiary);
-  padding: 16px 14px;
+  width: 230px;
+  background: var(--bg-1);
+  border-right: 0.5px solid var(--border);
+  padding: 22px 20px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  z-index: 10;
+  z-index: 3;
 }
-
 .info-card {
   position: absolute;
-  bottom: 14px; right: 14px;
-  width: 162px;
-  background: var(--color-background-primary);
-  border-radius: var(--border-radius-md);
-  padding: 10px 12px;
-  border: 0.5px solid var(--color-border-tertiary);
-  font-size: 11px;
+  bottom: 16px; right: 16px;
+  width: 208px;
+  background: var(--bg-1);
+  border-radius: 9px;
+  padding: 12px 14px;
+  border: 0.5px solid var(--border);
+  box-shadow: 0 6px 20px -6px rgba(40,38,60,.20);
   display: none;
-  z-index: 10;
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  z-index: 3;
 }
-
 .arc { fill: none; stroke-linecap: round; }
 .bn  { cursor: pointer; pointer-events: all; }
 .bn .nd { transition: r .18s ease; }
-
 @media (prefers-reduced-motion: no-preference) {
-  .pp { animation: ppa 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .pp { animation: ppa 3.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 }
 @keyframes ppa {
-  0%,100% { opacity: .08; transform: scale(1); }
-  50%      { opacity: .22; transform: scale(2.2); }
+  0%, 100% { opacity: .10; transform: scale(1); }
+  50%      { opacity: .20; transform: scale(2.2); }
 }
-
-button {
-  padding: 4px 12px;
-  font-size: 12px;
-  border: 0.5px solid var(--color-border-tertiary);
-  background: var(--color-background-secondary);
-  color: var(--color-text-primary);
-  border-radius: 6px;
-  cursor: pointer;
-}
-button:hover { background: var(--color-border-tertiary); }
-
 input[type=range] {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--color-background-secondary);
-  outline: none;
-  cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 4px; border-radius: 2px;
+  background: #E0DFDA; outline: none; cursor: pointer;
 }
 input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  background: var(--color-text-secondary);
-  cursor: pointer;
+  -webkit-appearance: none; width: 13px; height: 13px;
+  border-radius: 50%; background: var(--violet); cursor: pointer;
 }
-
-.mapboxgl-ctrl-bottom-right,
-.mapboxgl-ctrl-bottom-left { display: none; }
+input[type=range]::-moz-range-thumb {
+  width: 13px; height: 13px; border: none;
+  border-radius: 50%; background: var(--violet); cursor: pointer;
+}
+.play-btn {
+  width: 30px; height: 26px; flex: none;
+  border: 0.5px solid #E0DED8; background: #F7F6F3;
+  color: #3A2EA0; border-radius: 6px; cursor: pointer;
+  font-size: 11px; display: grid; place-items: center;
+}
 </style>
 </head>
 <body>
 <div class="card">
   <div id="map"></div>
   <svg id="overlay">
-    <g id="ie-arcs"></g>
+    <defs>
+      <filter id="halo" x="-25%" y="-25%" width="150%" height="150%">
+        <feDropShadow dx="0" dy="0" stdDeviation="1.6" flood-color="#ffffff" flood-opacity="0.95"/>
+      </filter>
+    </defs>
+    <g id="ie-labels"></g>
+    <g id="ie-arcs" filter="url(#halo)"></g>
     <g id="ie-nodes"></g>
   </svg>
 
   <div class="left-panel">
-    <p style="margin:0 0 2px;font-size:16px;font-weight:500;color:var(--color-text-primary);">Language statistics</p>
-    <p style="margin:0 0 12px;font-size:13px;color:var(--color-text-tertiary);">Indo-European family</p>
-    <p style="margin:0;font-size:12px;color:var(--color-text-secondary);">Total active speakers</p>
-    <p style="margin:1px 0 0;font-size:32px;font-weight:500;color:var(--color-text-primary);line-height:1;font-variant-numeric:tabular-nums;">~3.4B</p>
-    <p style="margin:0 0 12px;font-size:12px;color:var(--color-text-tertiary);">estimated native speakers</p>
-    <div style="border-top:0.5px solid var(--color-border-tertiary);padding-top:10px;flex:1;min-height:0;overflow:hidden;">
-      <p style="margin:0 0 8px;font-size:12px;font-weight:500;color:var(--color-text-secondary);">Speakers by branch</p>
+    <p style="margin:0;font-size:18px;font-weight:600;color:var(--text-1);letter-spacing:-.2px;">Language statistics</p>
+    <p style="margin:2px 0 0;font-size:13px;color:var(--text-3);">Indo-European family</p>
+
+    <p style="margin:22px 0 0;font-size:12px;color:var(--text-2);">Total active speakers</p>
+    <p style="margin:3px 0 0;font-size:36px;font-weight:600;color:var(--text-1);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.5px;">~3.4B</p>
+    <p style="margin:3px 0 0;font-size:12px;color:var(--text-3);">estimated native speakers</p>
+
+    <div style="border-top:0.5px solid #E8E6E0;margin-top:18px;padding-top:14px;flex:1;min-height:0;overflow:hidden;">
+      <p style="margin:0 0 11px;font-size:12px;font-weight:600;color:var(--text-2);">Speakers by branch</p>
       <div id="bars"></div>
     </div>
-    <div style="border-top:0.5px solid var(--color-border-tertiary);padding-top:10px;margin-top:10px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
-        <span style="font-size:12px;color:var(--color-text-secondary);">Year</span>
-        <span id="yr-label" style="font-size:15px;font-weight:500;color:var(--color-text-primary);font-variant-numeric:tabular-nums;">3500 BCE</span>
+
+    <div style="border-top:0.5px solid #E8E6E0;padding-top:13px;margin-top:13px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
+        <span style="font-size:12px;color:var(--text-2);">Year</span>
+        <span id="yr-label" style="font-size:15px;font-weight:600;color:var(--text-1);font-variant-numeric:tabular-nums;">3500 BCE</span>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;">
+      <div style="display:flex;align-items:center;gap:9px;">
         <input type="range" id="slider" min="-3500" max="2000" value="-3500" oninput="setYear(+this.value)">
-        <button id="play-btn" onclick="togglePlay()">▶</button>
+        <button class="play-btn" id="play-btn" onclick="togglePlay()">&#9658;</button>
       </div>
     </div>
   </div>
@@ -169,191 +142,205 @@ input[type=range]::-webkit-slider-thumb {
   <div class="info-card" id="info"></div>
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-<script src='https://api.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <script>
-mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN';
+const VIO = '#5B4BD6', HOME = '#3A2EA0';
 
 const BRANCHES = [
-  {id:'anatolian',  name:'Anatolian',      ex:true,  dy:-3000,ay:-2500,col:'#A87E10',lx:12, ly:4,  la:'start',  spk:0,    dest:[34,38.5],
-   desc:'First to separate (~3000 BCE). Hittite is the oldest attested IE language. Extinct c. 400 CE.',
+  {id:'anatolian',  name:'Anatolian',      ex:true,  col:'#9A8B4F', dy:-3000,ay:-2500,lx:12, ly:4,  la:'start',  spk:0,    dest:[34,38.5],
+   desc:'First branch to separate (~3000 BCE). Hittite is the oldest attested Indo-European language. Extinct c. 400 CE.',
    langs:'Hittite, Luwian, Lydian, Lycian'},
-  {id:'tocharian',  name:'Tocharian',       ex:true,  dy:-2500,ay:-1800,col:'#7060A8',lx:12, ly:4,  la:'start',  spk:0,    dest:[84,41],
-   desc:'Easternmost branch, yet paradoxically showing "western" features. Manuscripts found in Xinjiang. Extinct c. 9th century CE.',
+  {id:'tocharian',  name:'Tocharian',      ex:true,  col:'#8A7FA8', dy:-2500,ay:-1800,lx:-12,ly:4,  la:'end',    spk:0,    dest:[84,41],
+   desc:'Easternmost branch, yet showing several "western" features. Manuscripts were found in the Tarim Basin, Xinjiang. Extinct c. 9th century CE.',
    langs:'Tocharian A (Agnean), Tocharian B (Kuchean)'},
-  {id:'indo-iranian',name:'Indo-Iranian',   ex:false, dy:-2200,ay:-1500,col:'#B86A08',lx:12, ly:4,  la:'start',  spk:1400, dest:[68,30],
-   desc:'Largest IE branch. Splits into Indo-Aryan (~900M) and Iranian (~300M) sub-branches. Sanskrit is its oldest attested form.',
+  {id:'indo-iranian',name:'Indo-Iranian',  ex:false, col:'#C2683B', dy:-2200,ay:-1500,lx:12, ly:4,  la:'start',  spk:1400, dest:[68,30],
+   desc:'Largest branch. Divides into Indo-Aryan (~900M) and Iranian (~300M) sub-branches. Sanskrit is its oldest attested form.',
    langs:'Hindi, Urdu, Bengali, Persian, Pashto, Kurdish, Nepali'},
-  {id:'balto-slavic',name:'Balto-Slavic',  ex:false, dy:-1500,ay:-900, col:'#3A20A8',lx:0,  ly:-13,la:'middle', spk:320,  dest:[28,52],
-   desc:'Split into Baltic and Slavic sub-branches around 500 BCE. Slavic alone has ~300M speakers.',
+  {id:'balto-slavic',name:'Balto-Slavic',  ex:false, col:'#5B4BD6', dy:-1500,ay:-900, lx:0,  ly:-13,la:'middle', spk:320,  dest:[28,52],
+   desc:'Split into Baltic and Slavic sub-branches around 500 BCE. Slavic alone accounts for roughly 300M speakers.',
    langs:'Russian, Polish, Ukrainian, Czech, Serbian, Lithuanian, Latvian'},
-  {id:'armenian',   name:'Armenian',        ex:false, dy:-1500,ay:-1000,col:'#A00848',lx:12, ly:4,  la:'start',  spk:7,    dest:[44,40.5],
-   desc:'An isolated branch. A distinct Armenian script was devised in 405 CE by Mesrop Mashtots.',
-   langs:'Classical Armenian, Eastern Armenian, Western Armenian'},
-  {id:'hellenic',   name:'Hellenic',         ex:false, dy:-1800,ay:-1400,col:'#0E50B0',lx:-12,ly:4,  la:'end',    spk:13,   dest:[22,38],
-   desc:'Ancient Greek shaped Western philosophy. The New Testament was composed in Koine Greek.',
-   langs:'Mycenaean Greek †, Ancient Greek, Koine Greek, Modern Greek'},
-  {id:'italic',     name:'Italic / Romance', ex:false, dy:-1400,ay:-900, col:'#A82010',lx:-12,ly:4,  la:'end',    spk:900,  dest:[12,43],
-   desc:"Latin's descendants. Roman conquest and European colonialism spread Romance languages worldwide.",
-   langs:'Spanish, French, Portuguese, Italian, Romanian, Catalan'},
-  {id:'celtic',     name:'Celtic',           ex:false, dy:-1300,ay:-700, col:'#226810',lx:12, ly:4,  la:'start',  spk:2,    dest:[-4,52],
-   desc:'Once dominant across Europe — Gaul, Iberia, Anatolia. Now mainly confined to the Atlantic fringe.',
+  {id:'armenian',   name:'Armenian',       ex:false, col:'#A8447A', dy:-1500,ay:-1000,lx:12, ly:4,  la:'start',  spk:7,    dest:[44,40.5],
+   desc:'An independent, isolated branch. A distinct Armenian script was devised in 405 CE by Mesrop Mashtots.',
+   langs:'Classical, Eastern and Western Armenian'},
+  {id:'hellenic',   name:'Hellenic',       ex:false, col:'#2F6FB0', dy:-1800,ay:-1400,lx:-12,ly:4,  la:'end',    spk:13,   dest:[22,38],
+   desc:'Ancient Greek shaped Western philosophy and science. The New Testament was composed in Koine Greek.',
+   langs:'Mycenaean \u2020, Ancient, Koine and Modern Greek'},
+  {id:'italic',     name:'Italic-Romance', ex:false, col:'#B23A48', dy:-1400,ay:-900, lx:-12,ly:4,  la:'end',    spk:900,  dest:[12,43],
+   desc:"Latin's descendants. Roman expansion and later European colonialism carried Romance languages worldwide.",
+   langs:'Spanish, French, Portuguese, Italian, Romanian'},
+  {id:'celtic',     name:'Celtic',         ex:false, col:'#4F8A3D', dy:-1300,ay:-700, lx:12, ly:4,  la:'start',  spk:2,    dest:[-4,52],
+   desc:'Once dominant across Europe \u2014 Gaul, Iberia, Anatolia. Now largely confined to the Atlantic fringe.',
    langs:'Welsh, Irish, Scottish Gaelic, Breton, Cornish'},
-  {id:'germanic',   name:'Germanic',         ex:false, dy:-1200,ay:-700, col:'#087858',lx:0,  ly:-13,la:'middle', spk:520,  dest:[12,56],
+  {id:'germanic',   name:'Germanic',       ex:false, col:'#2E7D6B', dy:-1200,ay:-700, lx:0,  ly:-13,la:'middle', spk:520,  dest:[12,56],
    desc:'English has become the most widely spoken non-native language in history, with ~1.5 billion users.',
-   langs:'English, German, Dutch, Swedish, Norwegian, Danish, Icelandic'},
-  {id:'albanian',   name:'Albanian',         ex:false, dy:-1000,ay:-500, col:'#076878',lx:-12,ly:14, la:'end',    spk:8,    dest:[20,41.5],
-   desc:'An independent branch. Two major dialects: Gheg (north) and Tosk (south).',
+   langs:'English, German, Dutch, Swedish, Norwegian, Danish'},
+  {id:'albanian',   name:'Albanian',       ex:false, col:'#3E8E9E', dy:-1000,ay:-500, lx:-12,ly:14, la:'end',    spk:8,    dest:[20,41.5],
+   desc:'An independent branch with two major dialect groups: Gheg (north) and Tosk (south).',
    langs:'Gheg Albanian, Tosk Albanian'},
+];
+
+const LABELS = [
+  ['Iceland',-19,65],['United Kingdom',-3,53.2],['France',2,47],['Spain',-4,40],['Germany',10,51],
+  ['Italy',13,42.6],['Poland',19.5,52],['Greece',22,39.4],['T\u00fcrkiye',35,39],['Egypt',30,26.5],
+  ['Libya',18,27],['Algeria',3,28],['Morocco',-7,32],['Saudi Arabia',45,23.5],['Iran',54,32],
+  ['Iraq',43.5,33],['Kazakhstan',67,48],['Russia',56,58],['India',79,22],['Pakistan',69,29.5],
+  ['Ukraine',32,49],['Sweden',15,62.5],['Norway',9,62],['Finland',26,64],['Sudan',30,15],
+  ['Afghanistan',66,34],['Uzbekistan',63.5,42],['Syria',38,35],['China',88,37],['Romania',25,46],
 ];
 
 let curY = -3500, playing = false, timer = null;
 
-function arc([x1,y1],[x2,y2]){
+function arc([x1,y1],[x2,y2]) {
   const mx=(x1+x2)/2, my=(y1+y2)/2, d=Math.hypot(x2-x1, y2-y1);
   return `M${x1},${y1} Q${mx},${my-d*0.28} ${x2},${y2}`;
 }
 
-// Speaker bars
+// Sidebar speaker bars
 const barsEl = document.getElementById('bars');
 [...BRANCHES].filter(b=>!b.ex).sort((a,b)=>b.spk-a.spk).forEach(b=>{
-  const pct = Math.max(b.spk/1400*100, 1.5);
+  const pct = Math.max(b.spk/1400*100, 2);
   const lbl = b.spk>=1000 ? `${(b.spk/1000).toFixed(1)}B` : `${b.spk}M`;
   const row = document.createElement('div');
-  row.style.cssText = 'display:flex;align-items:center;gap:4px;margin-bottom:5px;cursor:pointer;';
-  row.innerHTML = `<span style="font-size:11px;min-width:72px;color:var(--color-text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.name}</span><div style="flex:1;background:var(--color-background-secondary);border-radius:3px;height:6px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:${b.col};border-radius:3px;"></div></div><span style="font-size:11px;min-width:30px;text-align:right;color:var(--color-text-tertiary);">${lbl}</span>`;
+  row.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:7px;cursor:pointer;';
+  row.innerHTML =
+    `<span style="font-size:${b.name.length>11?10:11}px;width:78px;flex:none;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.name}</span>`+
+    `<div style="flex:1;background:var(--bar-track);border-radius:3px;height:5px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:${b.col};border-radius:3px;"></div></div>`+
+    `<span style="font-size:11px;min-width:30px;text-align:right;color:var(--text-3);font-variant-numeric:tabular-nums;">${lbl}</span>`;
   row.addEventListener('click', ()=>showInfo(b));
   barsEl.appendChild(row);
 });
 
-// Mapbox map
-const map = new mapboxgl.Map({
-  container: 'map',
-  style: 'mapbox://styles/mapbox/light-v11',
-  projection: 'mercator',
-  interactive: false,
-  attributionControl: false
+// Leaflet terrain map
+const map = L.map('map', {
+  zoomControl:false, attributionControl:false, dragging:false, scrollWheelZoom:false,
+  doubleClickZoom:false, boxZoom:false, keyboard:false, touchZoom:false, zoomSnap:0.05, zoomDelta:0.05
 });
 
-map.on('load', () => {
-  // Fit to Eurasian IE region, padding left for the stats panel
-  const panelW = document.querySelector('.left-panel').offsetWidth;
-  map.fitBounds([[-20, 5], [90, 68]], {
-    padding: { top: 10, bottom: 10, left: panelW + 20, right: 20 },
-    duration: 0
-  });
+// Shaded-relief base + crisp hillshade overlay (free, no token)
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}',
+  { maxZoom: 13, opacity: 1, className: 'relief', crossOrigin: true }).addTo(map);
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
+  { maxZoom: 13, opacity: 0.9, className: 'hillshade', crossOrigin: true }).addTo(map);
 
-  // SVG overlay — coordinate space matches map.project() (CSS pixels from card top-left)
-  const W = map.getContainer().offsetWidth;
-  const H = map.getContainer().offsetHeight;
-  const svg = d3.select('#overlay').attr('viewBox', `0 0 ${W} ${H}`);
+function fitRegion() {
+  map.fitBounds([[7,-20],[67,90]], { paddingTopLeft:[244,14], paddingBottomRight:[16,16], animate:false });
+}
+fitRegion();
+map.invalidateSize(false);
+fitRegion();
 
-  const piePx = map.project([47, 47]);
-  const PIE   = [piePx.x, piePx.y];
+const pt = (lng,lat) => { const p = map.latLngToContainerPoint([lat,lng]); return [p.x, p.y]; };
 
-  BRANCHES.forEach(b => {
-    const px = map.project(b.dest);
-    b.ep = [px.x, px.y];
+// Faint political borders for context, then draw the overlay
+fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+  .then(r => r.json())
+  .then(world => {
+    const land = topojson.feature(world, world.objects.countries);
+    L.geoJSON(land, { interactive:false, style:{ color:'#8C8A83', weight:0.5, opacity:0.35, fill:false } }).addTo(map);
+  })
+  .catch(()=>{})
+  .finally(drawOverlay);
+
+function drawOverlay() {
+  const svg = d3.select('#overlay');
+
+  // Country labels
+  const lg = svg.select('#ie-labels');
+  LABELS.forEach(([nm,lo,la])=>{
+    const p = pt(lo,la);
+    lg.append('text').attr('x',p[0]).attr('y',p[1]).attr('text-anchor','middle')
+      .attr('font-size',9.5).attr('fill','#6F6D67').attr('fill-opacity',.85).attr('letter-spacing','.2px')
+      .attr('stroke','rgba(255,255,255,.85)').attr('stroke-width',2.4).attr('paint-order','stroke fill').text(nm);
   });
 
   const ag = svg.select('#ie-arcs');
   const ng = svg.select('#ie-nodes');
+  const PIE = pt(47,47);
+  BRANCHES.forEach(b => { b.ep = pt(b.dest[0], b.dest[1]); });
 
-  // PIE homeland pulse + dot
-  const pg = ng.append('g').attr('transform', `translate(${PIE[0]},${PIE[1]})`);
-  pg.append('circle').attr('class','pp').attr('r',24).attr('fill','#4820A0').attr('fill-opacity',.12);
-  pg.append('circle').attr('r',10).attr('fill','#4820A0').attr('stroke','#F5F2FF').attr('stroke-width',2.5);
-  pg.append('text').attr('y',-17).attr('text-anchor','middle')
-    .attr('font-family','var(--font-sans)').attr('font-size',12.5).attr('font-weight','600')
-    .attr('fill','#2A1460').attr('stroke','rgba(255,255,255,0.85)').attr('stroke-width',3.5).attr('paint-order','stroke fill')
+  // PIE homeland
+  const pg = ng.append('g').attr('transform',`translate(${PIE[0]},${PIE[1]})`);
+  pg.append('circle').attr('class','pp').attr('r',24).attr('fill',HOME).attr('fill-opacity',.14);
+  pg.append('circle').attr('r',8).attr('fill',HOME).attr('stroke','#fff').attr('stroke-width',2.2);
+  pg.append('text').attr('y',-15).attr('text-anchor','middle').attr('font-size',12).attr('font-weight',600)
+    .attr('fill','#2A1E70').attr('stroke','rgba(255,255,255,.92)').attr('stroke-width',3).attr('paint-order','stroke fill')
     .text('PIE homeland');
 
-  // Branch arcs
-  BRANCHES.forEach(b=>{
+  // Arcs
+  BRANCHES.forEach(b => {
     const el = ag.append('path').attr('id','arc-'+b.id).attr('class','arc')
-      .attr('d', arc(PIE, b.ep)).attr('stroke', b.col)
-      .attr('stroke-width', b.ex ? 1.8 : 2.5).attr('stroke-opacity', b.ex ? .45 : .9);
+      .attr('d', arc(PIE,b.ep)).attr('stroke',b.col)
+      .attr('stroke-width', b.ex?1.5:2.2).attr('stroke-opacity', b.ex?.5:.9);
+    if (b.ex) el.attr('stroke-dasharray','1,5');
     b.len = el.node().getTotalLength();
-    el.attr('stroke-dasharray', b.len).attr('stroke-dashoffset', b.len);
+    if (!b.ex) el.attr('stroke-dasharray', b.len).attr('stroke-dashoffset', b.len);
   });
 
-  // Branch nodes + labels
-  BRANCHES.forEach(b=>{
+  // Nodes + labels
+  BRANCHES.forEach(b => {
     const g = ng.append('g').attr('id','node-'+b.id).attr('class','bn')
-      .attr('transform', `translate(${b.ep[0]},${b.ep[1]})`).attr('opacity',0)
+      .attr('transform',`translate(${b.ep[0]},${b.ep[1]})`).attr('opacity',0)
       .on('click', ()=>showInfo(b))
-      .on('mouseenter', function(){ d3.select(this).select('.nd').attr('r',9); })
-      .on('mouseleave', function(){ d3.select(this).select('.nd').attr('r',7); });
-    g.append('circle').attr('class','nd').attr('r',7)
-      .attr('fill',b.col).attr('fill-opacity',b.ex?.55:1)
-      .attr('stroke','white').attr('stroke-width',2.2);
-    g.append('text').attr('x',b.lx).attr('y',b.ly)
-      .attr('text-anchor',b.la).attr('dominant-baseline','middle')
-      .attr('font-family','var(--font-sans)').attr('font-size',12).attr('font-weight','500')
-      .attr('fill', b.ex ? '#807060' : '#141414')
-      .attr('stroke','rgba(255,255,255,0.85)').attr('stroke-width',3).attr('paint-order','stroke fill')
-      .text(b.name + (b.ex?' †':''));
+      .on('mouseenter', function(){ d3.select(this).select('.nd').attr('r',6.5); })
+      .on('mouseleave', function(){ d3.select(this).select('.nd').attr('r',5); });
+    g.append('circle').attr('class','nd').attr('r',5).attr('fill',b.col).attr('fill-opacity',b.ex?.6:1)
+      .attr('stroke','#fff').attr('stroke-width',2);
+    g.append('text').attr('x',b.lx).attr('y',b.ly).attr('text-anchor',b.la).attr('dominant-baseline','middle')
+      .attr('font-size',11.5).attr('font-weight',500).attr('fill', b.ex?'#7C766B':'#1E1E1E')
+      .attr('stroke','rgba(255,255,255,.92)').attr('stroke-width',2.8).attr('paint-order','stroke fill')
+      .text(b.name + (b.ex?' \u2020':''));
   });
 
   setYear(-3500);
-});
+}
 
 function setYear(yr) {
   yr = +yr; curY = yr;
   document.getElementById('slider').value = yr;
   document.getElementById('yr-label').textContent =
-    yr < 0 ? `${Math.abs(yr)} BCE` : yr === 0 ? '1 CE' : `${yr} CE`;
-
-  BRANCHES.forEach(b=>{
+    yr < 0 ? `${Math.abs(yr)} BCE` : (yr === 0 ? '1 CE' : `${yr} CE`);
+  BRANCHES.forEach(b => {
     if (!b.len) return;
     const pe = document.getElementById('arc-'+b.id);
     const ne = d3.select('#node-'+b.id);
     const sp = b.ay - b.dy;
-    if (yr < b.dy) {
-      pe.setAttribute('stroke-dashoffset', b.len);
-      ne.attr('opacity', 0);
-    } else if (yr >= b.ay) {
-      pe.setAttribute('stroke-dashoffset', 0);
-      ne.attr('opacity', 1);
-    } else {
-      const t = (yr - b.dy) / sp;
-      pe.setAttribute('stroke-dashoffset', b.len * (1-t));
-      ne.attr('opacity', t > .8 ? (t-.8)/.2 : 0);
-    }
+    if (yr < b.dy) { if(!b.ex && pe) pe.setAttribute('stroke-dashoffset', b.len); ne.attr('opacity',0); }
+    else if (yr >= b.ay) { if(!b.ex && pe) pe.setAttribute('stroke-dashoffset', 0); ne.attr('opacity',1); }
+    else { const t=(yr-b.dy)/sp; if(!b.ex && pe) pe.setAttribute('stroke-dashoffset', b.len*(1-t)); ne.attr('opacity', t>.8?(t-.8)/.2:0); }
   });
 }
 
 function togglePlay() {
-  if (playing) {
-    clearInterval(timer); playing = false;
-    document.getElementById('play-btn').textContent = '▶';
-    return;
-  }
+  const btn = document.getElementById('play-btn');
+  if (playing) { clearInterval(timer); playing=false; btn.innerHTML='&#9658;'; return; }
   if (curY >= 2000) setYear(-3500);
-  playing = true;
-  document.getElementById('play-btn').textContent = '⏸';
+  playing = true; btn.innerHTML='&#10073;&#10073;';
   timer = setInterval(()=>{
-    if (curY >= 2000) { clearInterval(timer); playing = false; document.getElementById('play-btn').textContent='▶'; return; }
+    if (curY >= 2000) { clearInterval(timer); playing=false; btn.innerHTML='&#9658;'; return; }
     setYear(curY + 25);
   }, 40);
 }
 
 function showInfo(b) {
-  const yr  = b.dy < 0 ? `c. ${Math.abs(b.dy)} BCE` : `${b.dy} CE`;
-  const ext = b.ex ? ` <span style="font-size:9px;color:var(--color-text-tertiary);">extinct</span>` : '';
-  const card = document.getElementById('info');
-  card.style.display = 'block';
-  card.innerHTML = `
-    <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
-      <span style="width:11px;height:11px;border-radius:3px;background:${b.col};opacity:${b.ex?.62:1};flex-shrink:0;display:inline-block;"></span>
-      <strong style="font-size:11px;color:var(--color-text-primary);">${b.name}</strong>${ext}
+  const yr = b.dy<0 ? `c. ${Math.abs(b.dy)} BCE` : `${b.dy} CE`;
+  const ext = b.ex ? ` <span style="font-size:9.5px;color:var(--text-3);">\u00b7 extinct</span>` : '';
+  const c = document.getElementById('info');
+  c.style.display = 'block';
+  c.innerHTML = `
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">
+      <span style="width:9px;height:9px;border-radius:2px;background:${b.col};flex:none;display:inline-block;"></span>
+      <strong style="font-size:12px;color:var(--text-1);font-weight:600;">${b.name}</strong>${ext}
     </div>
-    <p style="margin:0 0 3px;font-size:9px;color:var(--color-text-tertiary);">Diverged ${yr}</p>
-    <p style="margin:0 0 6px;font-size:10px;line-height:1.5;color:var(--color-text-secondary);">${b.desc}</p>
-    <p style="margin:0;padding-top:5px;border-top:0.5px solid var(--color-border-tertiary);font-size:9px;color:var(--color-text-tertiary);">
-      <strong style="color:var(--color-text-secondary);">Languages:</strong> ${b.langs}
+    <p style="margin:0 0 5px;font-size:10px;color:var(--text-3);">Diverged ${yr}</p>
+    <p style="margin:0 0 7px;font-size:11px;line-height:1.5;color:var(--text-2);">${b.desc}</p>
+    <p style="margin:0;padding-top:6px;border-top:0.5px solid #E8E6E0;font-size:10px;color:var(--text-3);line-height:1.45;">
+      <strong style="color:var(--text-2);font-weight:600;">Languages:</strong> ${b.langs}
     </p>`;
 }
+
+window.addEventListener('resize', () => { map.invalidateSize(false); fitRegion(); });
 </script>
 </body>
 </html>
