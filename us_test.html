@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>US Language Diffusion</title>
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.25.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
 <style>
 :root {
   --text-1: #1A1A1A;
@@ -53,7 +54,8 @@ body::before {
   position: absolute;
   top: 0; left: 0; bottom: 0;
   width: 250px;
-  background: var(--bg-1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
   border-right: 0.5px solid var(--border);
   padding: 22px 20px;
   display: flex;
@@ -68,9 +70,36 @@ input[type=range] {
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none; width: 13px; height: 13px;
   border-radius: 50%; background: #4e79a7; cursor: pointer;
+  transition: transform 0.1s;
+}
+input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
 }
 .legend-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
 .legend-color { width: 12px; height: 12px; border-radius: 50%; flex: none; margin-top: 2px; }
+
+/* Tooltip Styling */
+.mapboxgl-popup {
+  max-width: 260px !important;
+  pointer-events: none;
+}
+.mapboxgl-popup-content {
+  background: rgba(25, 25, 25, 0.95) !important;
+  backdrop-filter: blur(10px);
+  color: #fff;
+  border-radius: 8px !important;
+  padding: 12px 14px !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15) !important;
+  border: 1px solid rgba(255,255,255,0.1);
+  font-family: var(--font-sans);
+}
+.mapboxgl-popup-tip {
+  border-top-color: rgba(25, 25, 25, 0.95) !important;
+  border-bottom-color: rgba(25, 25, 25, 0.95) !important;
+}
+.popup-title { font-size: 13px; font-weight: 600; margin: 0 0 4px; color: #fff; }
+.popup-subtitle { font-size: 11px; font-weight: 500; margin: 0 0 6px; color: #bbb; text-transform: uppercase; letter-spacing: 0.5px;}
+.popup-desc { font-size: 11px; line-height: 1.4; margin: 0; color: #ddd; }
 </style>
 </head>
 <body>
@@ -127,17 +156,52 @@ const map = new mapboxgl.Map({
   style: 'mapbox://styles/mapbox/standard',
   config: {
     basemap: {
-      theme: 'monochrome',
-      showPointOfInterestLabels: false,
-      showPlaceLabels: false,
-      showRoadLabels: false,
-      showTransitLabels: false
+      theme: 'monochrome'
+      // By removing the label-hiding flags, the map will now show state borders and city names!
     }
   },
   bounds: [[-125, 24], [-66, 49]],
   fitBoundsOptions: { padding: {top: 20, bottom: 20, left: 270, right: 20} },
   interactive: true
 });
+
+const popup = new mapboxgl.Popup({
+  closeButton: false,
+  closeOnClick: false,
+  className: 'custom-popup',
+  anchor: 'bottom',
+  offset: 15
+});
+
+// Flow animation logic using Mapbox's line-dasharray
+const dashArraySequence = [
+  [0, 4, 3],
+  [0.5, 4, 2.5],
+  [1, 4, 2],
+  [1.5, 4, 1.5],
+  [2, 4, 1],
+  [2.5, 4, 0.5],
+  [3, 4, 0],
+  [0, 0.5, 3, 3.5],
+  [0, 1, 3, 3],
+  [0, 1.5, 3, 2.5],
+  [0, 2, 3, 2],
+  [0, 2.5, 3, 1.5],
+  [0, 3, 3, 1],
+  [0, 3.5, 3, 0.5]
+];
+
+let step = 0;
+function animateDashArray(timestamp) {
+  const newStep = parseInt((timestamp / 45) % dashArraySequence.length);
+  if (newStep !== step) {
+    if (map.getLayer('language-edges-line')) {
+      map.setPaintProperty('language-edges-line', 'line-dasharray', dashArraySequence[newStep]);
+    }
+    step = newStep;
+  }
+  requestAnimationFrame(animateDashArray);
+}
 
 map.on('load', () => {
   // Add terrain
@@ -158,12 +222,38 @@ map.on('load', () => {
     fetch('./us_language_json_objects/language_points.geojson').then(r => { if (!r.ok) throw new Error('Points 404'); return r.json(); })
   ])
   .then(([regionsData, edgesData, pointsData]) => {
+    
+    // Process edges to be curved instead of straight
+    const curvedEdges = {
+      type: "FeatureCollection",
+      features: edgesData.features.map(f => {
+        const coords = f.geometry.coordinates;
+        if (coords.length < 2) return f;
+        const start = coords[0];
+        const end = coords[coords.length - 1];
+        
+        const mid = turf.midpoint(turf.point(start), turf.point(end));
+        const distance = turf.distance(turf.point(start), turf.point(end));
+        const bearing = turf.bearing(turf.point(start), turf.point(end));
+        
+        // Offset perpendicular to create a sweeping curve
+        const offsetDistance = distance * 0.18; 
+        const offsetBearing = bearing - 90;
+        const controlPoint = turf.destination(mid, offsetDistance, offsetBearing);
+        
+        const line = turf.lineString([start, controlPoint.geometry.coordinates, end]);
+        const curved = turf.bezierSpline(line, { resolution: 10000, sharpness: 0.85 });
+        curved.properties = f.properties;
+        return curved;
+      })
+    };
+
     // Sources
     map.addSource('language-regions', { type: 'geojson', data: regionsData });
-    map.addSource('language-edges', { type: 'geojson', data: edgesData });
+    map.addSource('language-edges', { type: 'geojson', data: curvedEdges });
     map.addSource('language-points', { type: 'geojson', data: pointsData });
 
-    // Layers from config
+    // 1. Regions Fill (removed outline layer entirely for softer look)
     map.addLayer({
       "id": "language-regions-fill",
       "type": "fill",
@@ -177,28 +267,17 @@ map.on('load', () => {
           "lexical_hub_zone", "#f28e2b",
           "regional_lexical_zone", "#f28e2b",
           "lexical_and_convergence_zone", "#9c755f",
-          "#ff0000" // BRIGHT RED fallback to ensure it's visible
+          "#ff0000"
         ],
         "fill-opacity": [
           "interpolate", ["linear"], ["get", "confidence"],
-          0, 0.2,
-          1, 0.45 // Increased opacity
+          0, 0.08,
+          1, 0.28
         ]
       }
     });
 
-    map.addLayer({
-      "id": "language-regions-outline",
-      "type": "line",
-      "source": "language-regions",
-      "slot": "top",
-      "paint": {
-        "line-color": "#333333",
-        "line-opacity": 0.6,
-        "line-width": 2
-      }
-    });
-
+    // 2. Animated Curved Edges
     map.addLayer({
       "id": "language-edges-line",
       "type": "line",
@@ -214,13 +293,15 @@ map.on('load', () => {
         ],
         "line-width": [
           "interpolate", ["linear"], ["get", "strength"],
-          0, 1,
+          0, 2,
           1, 7
         ],
         "line-opacity": 0.8
       }
     });
+    animateDashArray(0);
 
+    // 3. Point Circles
     map.addLayer({
       "id": "language-points-circle",
       "type": "circle",
@@ -236,17 +317,89 @@ map.on('load', () => {
         ],
         "circle-radius": [
           "interpolate", ["linear"], ["get", "intensity_score"],
-          0, 4,
-          1, 22
+          0, 6,
+          1, 26
         ],
-        "circle-opacity": [
-          "interpolate", ["linear"], ["get", "intensity_score"],
-          0, 0.65,
-          1, 0.95
-        ],
+        "circle-opacity": 0.85,
         "circle-stroke-color": "#ffffff",
-        "circle-stroke-width": 2
+        "circle-stroke-width": 2.5
       }
+    });
+
+    // 4. Point City Labels
+    map.addLayer({
+      "id": "language-points-labels",
+      "type": "symbol",
+      "source": "language-points",
+      "slot": "top",
+      "layout": {
+        "text-field": ["get", "city"],
+        "text-font": ["Standard"],
+        "text-size": 11,
+        "text-offset": [0, 1.8],
+        "text-anchor": "top"
+      },
+      "paint": {
+        "text-color": "#2A2A2A",
+        "text-halo-color": "#ffffff",
+        "text-halo-width": 2
+      }
+    });
+
+    // Hover Interactivity
+    
+    // Points Hover
+    map.on('mouseenter', 'language-points-circle', (e) => {
+      map.getCanvas().style.cursor = 'pointer';
+      const props = e.features[0].properties;
+      popup.setLngLat(e.features[0].geometry.coordinates)
+        .setHTML(`
+          <p class="popup-subtitle">${props.feature_name || 'Language Feature'}</p>
+          <p class="popup-title">${props.city}, ${props.state}</p>
+          <p class="popup-desc">${props.description || 'No description available.'}</p>
+          <p class="popup-desc" style="margin-top:6px; opacity:0.8;">Variant: ${props.dominant_variant}</p>
+        `)
+        .addTo(map);
+    });
+    map.on('mouseleave', 'language-points-circle', () => {
+      map.getCanvas().style.cursor = '';
+      popup.remove();
+    });
+
+    // Edges Hover
+    map.on('mouseenter', 'language-edges-line', (e) => {
+      if (popup.isOpen()) return; // Don't override point popup
+      map.getCanvas().style.cursor = 'pointer';
+      const props = e.features[0].properties;
+      popup.setLngLat(e.lngLat)
+        .setHTML(`
+          <p class="popup-subtitle">Diffusion Path</p>
+          <p class="popup-title">${props.from} &rarr; ${props.to}</p>
+          <p class="popup-desc">${props.description}</p>
+        `)
+        .addTo(map);
+    });
+    map.on('mouseleave', 'language-edges-line', () => {
+      map.getCanvas().style.cursor = '';
+      popup.remove();
+    });
+
+    // Regions Hover
+    map.on('mouseenter', 'language-regions-fill', (e) => {
+      if (popup.isOpen()) return; // Don't override point/edge popup
+      map.getCanvas().style.cursor = 'pointer';
+      const props = e.features[0].properties;
+      popup.setLngLat(e.lngLat)
+        .setHTML(`
+          <p class="popup-subtitle">Dialect Region</p>
+          <p class="popup-title">${props.name}</p>
+          <p class="popup-desc">${props.description}</p>
+        `)
+        .addTo(map);
+    });
+    map.on('mouseleave', 'language-regions-fill', () => {
+      map.getCanvas().style.cursor = '';
+      popup.remove();
     });
 
     // Initial filter
@@ -264,6 +417,9 @@ function setYear(yr) {
   
   if (map.getLayer('language-points-circle')) {
     map.setFilter('language-points-circle', ['<=', ['get', 'year'], yr]);
+  }
+  if (map.getLayer('language-points-labels')) {
+    map.setFilter('language-points-labels', ['<=', ['get', 'year'], yr]);
   }
   if (map.getLayer('language-edges-line')) {
     map.setFilter('language-edges-line', ['<=', ['get', 'year_start'], yr]);
