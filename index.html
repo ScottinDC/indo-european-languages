@@ -178,10 +178,10 @@ const BRANCHES = [
   {id:'tocharian',  name:'Tocharian',      ex:true,  col:'#8A7FA8', dy:-2500,ay:-1800,lx:-12,ly:4,  la:'end',    spk:0,    dev_yrs:1250, spread_rate:2.4, dist_km:3000, dest:[84,41],
    desc:'Easternmost branch, yet showing several "western" features. Manuscripts were found in the Tarim Basin, Xinjiang. Extinct c. 9th century CE.',
    langs:'Tocharian A (Agnean), Tocharian B (Kuchean)'},
-  {id:'indo-iranian',name:'Indo-Iranian',  ex:false, col:'#C2683B', dy:-2200,ay:-1500,lx:12, ly:4,  la:'start',  spk:1400, dev_yrs:2500, spread_rate:1.1, dist_km:2700, dest:[68,30],
-   desc:'Largest branch. Divides into Indo-Aryan (~900M) and Iranian (~300M) sub-branches. Sanskrit is its oldest attested form.',
+  {id:'indo-iranian',name:'Indo-Iranian',  ex:false, col:'#C2683B', dy:-2200,ay:-1500,lx:12, ly:4,  la:'start',  spk:0, dev_yrs:2500, spread_rate:1.1, dist_km:2700, dest:[68,30],
+   desc:'Largest branch. Divides into Indo-Aryan and Iranian sub-branches. Sanskrit is its oldest attested form.',
    langs:'Hindi, Urdu, Bengali, Persian, Pashto, Kurdish, Nepali'},
-  {id:'balto-slavic',name:'Balto-Slavic',  ex:false, col:'#5B4BD6', dy:-1500,ay:-900, lx:0,  ly:-13,la:'middle', spk:320,  dev_yrs:3500, spread_rate:0.5, dist_km:1600, dest:[28,52],
+  {id:'balto-slavic',name:'Balto-Slavic',  ex:false, col:'#5B4BD6', dy:-1500,ay:-900, lx:0,  ly:-13,la:'middle', spk:0,  dev_yrs:3500, spread_rate:0.5, dist_km:1600, dest:[28,52],
    desc:'Split into Baltic and Slavic sub-branches around 500 BCE. Slavic alone accounts for roughly 300M speakers.',
    langs:'Russian, Polish, Ukrainian, Czech, Serbian, Lithuanian, Latvian'},
   {id:'armenian',   name:'Armenian',       ex:false, col:'#A8447A', dy:-1500,ay:-1000,lx:12, ly:4,  la:'start',  spk:7,    dev_yrs:2750, spread_rate:0.3, dist_km:900,  dest:[44,40.5],
@@ -190,18 +190,35 @@ const BRANCHES = [
   {id:'hellenic',   name:'Hellenic',       ex:false, col:'#2F6FB0', dy:-1800,ay:-1400,lx:-12,ly:4,  la:'end',    spk:13,   dev_yrs:2600, spread_rate:0.7, dist_km:1900, dest:[22,38],
    desc:'Ancient Greek shaped Western philosophy and science. The New Testament was composed in Koine Greek.',
    langs:'Mycenaean \u2020, Ancient, Koine and Modern Greek'},
-  {id:'italic',     name:'Italic-Romance', ex:false, col:'#B23A48', dy:-1400,ay:-900, lx:-12,ly:4,  la:'end',    spk:900,  dev_yrs:3000, spread_rate:0.8, dist_km:2500, dest:[12,43],
+  {id:'italic',     name:'Italic-Romance', ex:false, col:'#B23A48', dy:-1400,ay:-900, lx:-12,ly:4,  la:'end',    spk:0,  dev_yrs:3000, spread_rate:0.8, dist_km:2500, dest:[12,43],
    desc:"Latin's descendants. Roman expansion and later European colonialism carried Romance languages worldwide.",
    langs:'Spanish, French, Portuguese, Italian, Romanian'},
-  {id:'celtic',     name:'Celtic',         ex:false, col:'#4F8A3D', dy:-1300,ay:-700, lx:12, ly:4,  la:'start',  spk:2,    dev_yrs:3450, spread_rate:1.0, dist_km:3400, dest:[-4,52],
+  {id:'celtic',     name:'Celtic',         ex:false, col:'#4F8A3D', dy:-1300,ay:-700, lx:12, ly:4,  la:'start',  spk:0,    dev_yrs:3450, spread_rate:1.0, dist_km:3400, dest:[-4,52],
    desc:'Once dominant across Europe \u2014 Gaul, Iberia, Anatolia. Now largely confined to the Atlantic fringe.',
    langs:'Welsh, Irish, Scottish Gaelic, Breton, Cornish'},
-  {id:'germanic',   name:'Germanic',       ex:false, col:'#2E7D6B', dy:-1200,ay:-700, lx:0,  ly:-13,la:'middle', spk:520,  dev_yrs:3750, spread_rate:0.7, dist_km:2500, dest:[12,56],
+  {id:'germanic',   name:'Germanic',       ex:false, col:'#2E7D6B', dy:-1200,ay:-700, lx:0,  ly:-13,la:'middle', spk:0,  dev_yrs:3750, spread_rate:0.7, dist_km:2500, dest:[12,56],
    desc:'English has become the most widely spoken non-native language in history, with ~1.5 billion users.',
    langs:'English, German, Dutch, Swedish, Norwegian, Danish'},
   {id:'albanian',   name:'Albanian',       ex:false, col:'#3E8E9E', dy:-1000,ay:-500, lx:-12,ly:14, la:'end',    spk:8,    dev_yrs:3250, spread_rate:0.6, dist_km:2100, dest:[20,41.5],
    desc:'An independent branch with two major dialect groups: Gheg (north) and Tosk (south).',
    langs:'Gheg Albanian, Tosk Albanian'},
+
+  // Level 3 Branches
+  {id:'indo-aryan', parentId:'indo-iranian', name:'Indo-Aryan', ex:false, col:'#C2683B', dy:-1500, ay:-1000, lx:12, ly:8, la:'start', spk:1100, dev_yrs:3000, spread_rate:1.4, dist_km:1500, dest:[78,25], desc:'Migrated into the Indian subcontinent. Classical Sanskrit becomes a major liturgical language.', langs:'Hindi, Urdu, Bengali, Marathi, Punjabi'},
+  {id:'iranian', parentId:'indo-iranian', name:'Iranian', ex:false, col:'#C2683B', dy:-1000, ay:-500, lx:-12, ly:-8, la:'end', spk:300, dev_yrs:2500, spread_rate:1.0, dist_km:1200, dest:[54,32], desc:'Concentrated across the Iranian plateau and Central Asia. Avestan is the oldest attested language.', langs:'Persian, Pashto, Kurdish, Balochi'},
+  
+  {id:'baltic', parentId:'balto-slavic', name:'Baltic', ex:false, col:'#5B4BD6', dy:-500, ay:0, lx:-12, ly:-6, la:'end', spk:6, dev_yrs:2500, spread_rate:0.4, dist_km:400, dest:[24,57], desc:'Concentrated along the Eastern Baltic Sea. Highly conservative, retaining many PIE features.', langs:'Lithuanian, Latvian'},
+  {id:'slavic', parentId:'balto-slavic', name:'Slavic', ex:false, col:'#5B4BD6', dy:500, ay:1000, lx:12, ly:6, la:'start', spk:314, dev_yrs:1500, spread_rate:1.5, dist_km:1200, dest:[32,50], desc:'Massive outward spread into Eastern, Central, and Southern Europe during the Early Middle Ages.', langs:'Russian, Polish, Ukrainian, Czech, Serbian'},
+  
+  {id:'north-germanic', parentId:'germanic', name:'North Germanic', ex:false, col:'#2E7D6B', dy:200, ay:800, lx:0, ly:-12, la:'middle', spk:20, dev_yrs:1800, spread_rate:0.8, dist_km:800, dest:[15,60], desc:'Spread north into Scandinavia. Old Norse expanded rapidly during the Viking Age.', langs:'Swedish, Norwegian, Danish, Icelandic'},
+  {id:'west-germanic', parentId:'germanic', name:'West Germanic', ex:false, col:'#2E7D6B', dy:200, ay:600, lx:-12, ly:4, la:'end', spk:500, dev_yrs:1800, spread_rate:0.6, dist_km:600, dest:[6,51], desc:'Concentrated in Central Europe and spread to the British Isles with the Anglo-Saxons.', langs:'English, German, Dutch'},
+  {id:'east-germanic', parentId:'germanic', name:'East Germanic', ex:true, col:'#2E7D6B', dy:300, ay:500, lx:12, ly:4, la:'start', spk:0, dev_yrs:500, spread_rate:2.5, dist_km:1500, dest:[12,42], desc:'The Gothic migration south towards the Mediterranean and Iberia. All extinct by the 18th century.', langs:'Gothic, Vandalic, Burgundian'},
+  
+  {id:'latino-faliscan', parentId:'italic', name:'Latino-Faliscan', ex:false, col:'#B23A48', dy:0, ay:400, lx:-12, ly:-6, la:'end', spk:900, dev_yrs:2000, spread_rate:2.0, dist_km:2000, dest:[2,46], desc:'Radiated outward from Rome across Gaul, Iberia, and Dacia during the Roman Empire, becoming the Romance languages.', langs:'Spanish, French, Portuguese, Italian, Romanian'},
+  {id:'osco-umbrian', parentId:'italic', name:'Osco-Umbrian', ex:true, col:'#B23A48', dy:-300, ay:0, lx:12, ly:6, la:'start', spk:0, dev_yrs:500, spread_rate:0.5, dist_km:300, dest:[15,41], desc:'Concentrated in central and southern Italy before being absorbed and assimilated by Latin.', langs:'Oscan, Umbrian'},
+  
+  {id:'continental-celtic', parentId:'celtic', name:'Continental Celtic', ex:true, col:'#4F8A3D', dy:-500, ay:0, lx:0, ly:12, la:'middle', spk:0, dev_yrs:1000, spread_rate:1.2, dist_km:1000, dest:[2,47], desc:'Gaulish and Celtiberian spreading across France and Spain before being displaced by Latin.', langs:'Gaulish, Celtiberian, Lepontic'},
+  {id:'insular-celtic', parentId:'celtic', name:'Insular Celtic', ex:false, col:'#4F8A3D', dy:-100, ay:400, lx:-12, ly:-6, la:'end', spk:2, dev_yrs:2100, spread_rate:0.8, dist_km:800, dest:[-4,54], desc:'Spread into the British Isles. Replaced by English in many areas but survives today.', langs:'Welsh, Irish, Scottish Gaelic, Breton'}
 ];
 
 const LABELS = [
@@ -224,19 +241,24 @@ function renderBars(mode) {
   const el = document.getElementById('bars');
   el.innerHTML = '';
   let data, maxVal, valFn, labelFn;
+  
+  // Identify terminal branches (no children) so we don't duplicate metrics
+  const parentIds = new Set(BRANCHES.map(b => b.parentId).filter(id => id));
+  const terminalBranches = BRANCHES.filter(b => !parentIds.has(b.id));
+
   if (mode === 'speakers') {
-    data = [...BRANCHES].filter(b=>!b.ex && b.spk>0).sort((a,b)=>b.spk-a.spk);
+    data = [...terminalBranches].filter(b=>!b.ex && b.spk>0).sort((a,b)=>b.spk-a.spk);
     maxVal = 1400;
     valFn = b => b.spk;
     labelFn = b => b.spk>=1000 ? `${(b.spk/1000).toFixed(1)}B` : `${b.spk}M`;
   } else if (mode === 'development') {
-    data = [...BRANCHES].sort((a,b)=>b.dev_yrs-a.dev_yrs);
+    data = [...terminalBranches].sort((a,b)=>b.dev_yrs-a.dev_yrs);
     maxVal = 4000;
     valFn = b => b.dev_yrs;
     labelFn = b => `${b.dev_yrs.toLocaleString()}y`;
   } else {
-    data = [...BRANCHES].sort((a,b)=>b.spread_rate-a.spread_rate);
-    maxVal = 2.4;
+    data = [...terminalBranches].sort((a,b)=>b.spread_rate-a.spread_rate);
+    maxVal = 2.5;
     valFn = b => b.spread_rate;
     labelFn = b => `${b.spread_rate}km/y`;
   }
@@ -333,8 +355,13 @@ function drawOverlay() {
 
   // Arcs
   BRANCHES.forEach(b => {
+    let startPoint = PIE;
+    if (b.parentId) {
+      const parent = BRANCHES.find(p => p.id === b.parentId);
+      startPoint = parent.ep;
+    }
     const el = ag.append('path').attr('id','arc-'+b.id).attr('class','arc')
-      .attr('d', arc(PIE,b.ep)).attr('stroke',b.col)
+      .attr('d', arc(startPoint,b.ep)).attr('stroke',b.col)
       .attr('stroke-width', b.ex?1.5:2.2).attr('stroke-opacity', b.ex?.5:.9);
     if (b.ex) el.attr('stroke-dasharray','1,5');
     b.len = el.node().getTotalLength();
@@ -343,15 +370,20 @@ function drawOverlay() {
 
   // Nodes + labels
   BRANCHES.forEach(b => {
+    const isLevel3 = !!b.parentId;
+    const r = isLevel3 ? 3.5 : 5;
+    const hoverR = isLevel3 ? 5 : 6.5;
+    const fontSize = isLevel3 ? 10 : 11.5;
+
     const g = ng.append('g').attr('id','node-'+b.id).attr('class','bn')
       .attr('transform',`translate(${b.ep[0]},${b.ep[1]})`).attr('opacity',0)
       .on('click', ()=>{ showInfo(b); highlightArc(b.id); })
-      .on('mouseenter', function(){ d3.select(this).select('.nd').attr('r',6.5); })
-      .on('mouseleave', function(){ d3.select(this).select('.nd').attr('r',5); });
-    g.append('circle').attr('class','nd').attr('r',5).attr('fill',b.col).attr('fill-opacity',b.ex?.6:1)
-      .attr('stroke','#fff').attr('stroke-width',2);
+      .on('mouseenter', function(){ d3.select(this).select('.nd').attr('r',hoverR); })
+      .on('mouseleave', function(){ d3.select(this).select('.nd').attr('r',r); });
+    g.append('circle').attr('class','nd').attr('r',r).attr('fill',b.col).attr('fill-opacity',b.ex?.6:1)
+      .attr('stroke','#fff').attr('stroke-width',isLevel3 ? 1.5 : 2);
     g.append('text').attr('x',b.lx).attr('y',b.ly).attr('text-anchor',b.la).attr('dominant-baseline','middle')
-      .attr('font-size',11.5).attr('font-weight',500).attr('fill', b.ex?'#7C766B':'#1E1E1E')
+      .attr('font-size',fontSize).attr('font-weight',500).attr('fill', b.ex?'#7C766B':'#1E1E1E')
       .attr('stroke','rgba(255,255,255,.92)').attr('stroke-width',2.8).attr('paint-order','stroke fill')
       .text(b.name + (b.ex?' \u2020':''));
   });
@@ -425,7 +457,12 @@ map.on('move', () => {
   BRANCHES.forEach(b => { 
     b.ep = pt(b.dest[0], b.dest[1]); 
     const el = document.getElementById('arc-'+b.id);
-    if (el) el.setAttribute('d', arc(PIE,b.ep));
+    let startPoint = PIE;
+    if (b.parentId) {
+      const parent = BRANCHES.find(p => p.id === b.parentId);
+      startPoint = parent.ep;
+    }
+    if (el) el.setAttribute('d', arc(startPoint,b.ep));
     d3.select('#node-'+b.id).attr('transform', `translate(${b.ep[0]},${b.ep[1]})`);
   });
 });
