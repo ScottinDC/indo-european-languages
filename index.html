@@ -38,7 +38,7 @@ body::before {
   background-image: url('background-pattern-02.png');
   background-repeat: repeat;
   background-size: 480px auto;
-  opacity: 0.35;
+  opacity: 0.72;
   z-index: -1;
 }
 .card {
@@ -52,6 +52,16 @@ body::before {
   box-shadow: 0 10px 34px -10px rgba(40,38,60,.22), 0 2px 8px rgba(40,38,60,.08);
 }
 #map { position: absolute; inset: 0; z-index: 1; }
+.map-pattern {
+  position: absolute;
+  top: 0; left: 230px; right: 0; bottom: 0;
+  background-image: url('background-pattern-02.png');
+  background-size: 480px auto;
+  background-repeat: repeat;
+  opacity: 0.22;
+  z-index: 2;
+  pointer-events: none;
+}
 #overlay { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 .leaflet-container { background: transparent !important; font: inherit; }
 /* Pronounced shaded-relief terrain */
@@ -115,6 +125,7 @@ input[type=range]::-moz-range-thumb {
 <body>
 <div class="card">
   <div id="map"></div>
+  <div class="map-pattern"></div>
   <svg id="overlay">
     <defs>
       <filter id="halo" x="-25%" y="-25%" width="150%" height="150%">
@@ -332,7 +343,7 @@ function togglePlay() {
   timer = setInterval(()=>{
     if (curY >= 2000) { clearInterval(timer); playing=false; btn.innerHTML='&#9658;'; return; }
     setYear(curY + 25);
-  }, 40);
+  }, 46);
 }
 
 function showInfo(b) {
