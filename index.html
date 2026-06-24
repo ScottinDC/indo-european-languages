@@ -298,7 +298,11 @@ const map = new mapboxgl.Map({
   style: 'mapbox://styles/mapbox/standard',
   config: {
     basemap: {
-      theme: 'monochrome'
+      theme: 'monochrome',
+      showPointOfInterestLabels: false,
+      showPlaceLabels: false,
+      showRoadLabels: false,
+      showTransitLabels: false
     }
   },
   bounds: [[-20, 7], [90, 67]],
@@ -380,6 +384,14 @@ function drawOverlay() {
       .on('click', ()=>{ showInfo(b); highlightArc(b.id); })
       .on('mouseenter', function(){ d3.select(this).select('.nd').attr('r',hoverR); })
       .on('mouseleave', function(){ d3.select(this).select('.nd').attr('r',r); });
+      
+    if (isLevel3) {
+      // Add expanding geographic spread circle under the node
+      g.append('circle').attr('class', 'spread').attr('r', 0)
+       .attr('fill', b.col).attr('fill-opacity', 0.12)
+       .attr('stroke', b.col).attr('stroke-width', 1).attr('stroke-opacity', 0.3);
+    }
+      
     g.append('circle').attr('class','nd').attr('r',r).attr('fill',b.col).attr('fill-opacity',b.ex?.6:1)
       .attr('stroke','#fff').attr('stroke-width',isLevel3 ? 1.5 : 2);
     g.append('text').attr('x',b.lx).attr('y',b.ly).attr('text-anchor',b.la).attr('dominant-baseline','middle')
@@ -401,6 +413,21 @@ function setYear(yr) {
     const pe = document.getElementById('arc-'+b.id);
     const ne = d3.select('#node-'+b.id);
     const sp = b.ay - b.dy;
+    
+    const spreadCircle = ne.select('.spread');
+    if (!spreadCircle.empty()) {
+      if (yr <= b.ay) {
+        spreadCircle.attr('r', 0);
+      } else {
+        const spreadDuration = 800; // 800 years of geographic spread
+        const maxRadius = Math.max(30, (b.dist_km || 1000) / 22); 
+        let t = (yr - b.ay) / spreadDuration;
+        if (t > 1) t = 1;
+        const easeOut = 1 - Math.pow(1 - t, 3);
+        spreadCircle.attr('r', easeOut * maxRadius);
+      }
+    }
+
     if (yr < b.dy) { if(!b.ex && pe) pe.setAttribute('stroke-dashoffset', b.len); ne.attr('opacity',0); }
     else if (yr >= b.ay) { if(!b.ex && pe) pe.setAttribute('stroke-dashoffset', 0); ne.attr('opacity',1); }
     else { const t=(yr-b.dy)/sp; if(!b.ex && pe) pe.setAttribute('stroke-dashoffset', b.len*(1-t)); ne.attr('opacity', t>.8?(t-.8)/.2:0); }
