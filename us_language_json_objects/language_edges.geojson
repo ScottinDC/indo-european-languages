@@ -68,8 +68,8 @@
         "type": "LineString",
         "coordinates": [
           [
-            -118.2437,
-            34.0522
+            -122.4194,
+            37.7749
           ],
           [
             -122.3321,
@@ -78,8 +78,8 @@
         ]
       },
       "properties": {
-        "edge_id": "LEX-LAX-SEA-2012",
-        "from": "Los Angeles",
+        "edge_id": "LEX-SFO-SEA-2012",
+        "from": "San Francisco",
         "to": "Seattle",
         "feature_id": "online_lexical_innovation",
         "category": "lexical_diffusion",
@@ -88,7 +88,7 @@
         "relationship": "west-coast corridor",
         "expected_diffusion_speed": "fast",
         "strength": 0.77,
-        "description": "Illustrative West Coast lexical diffusion corridor.",
+        "description": "Illustrative West Coast lexical diffusion corridor originating from the Bay Area.",
         "data_status": "illustrative"
       }
     },
@@ -248,27 +248,27 @@
         "type": "LineString",
         "coordinates": [
           [
-            -118.2437,
-            34.0522
-          ],
-          [
             -95.3698,
             29.7604
+          ],
+          [
+            -84.388,
+            33.749
           ]
         ]
       },
       "properties": {
-        "edge_id": "LEX-LAX-HOU-2014",
-        "from": "Los Angeles",
-        "to": "Houston",
+        "edge_id": "LEX-HOU-ATL-2012",
+        "from": "Houston",
+        "to": "Atlanta",
         "feature_id": "online_lexical_innovation",
         "category": "lexical_diffusion",
         "year_start": 2012,
         "year_end": 2014,
-        "relationship": "large metro network",
+        "relationship": "sunbelt-metro-link",
         "expected_diffusion_speed": "fast",
-        "strength": 0.7,
-        "description": "Illustrative metro network diffusion.",
+        "strength": 0.81,
+        "description": "Illustrative diffusion between major Sunbelt cultural hubs.",
         "data_status": "illustrative"
       }
     },
