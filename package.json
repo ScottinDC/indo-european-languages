@@ -1,0 +1,9 @@
+{
+  "name": "indo-european-languages",
+  "private": true,
+  "scripts": {
+    "serve": "bash serve.sh",
+    "build": "cd test-designs/test-02 && npm ci && npm run build",
+    "dev": "cd test-designs/test-02 && npm run dev"
+  }
+}
